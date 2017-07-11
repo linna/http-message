@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Linna PSR7
+ * Linna Psr7
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
  * @copyright (c) 2017, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
- *
  */
+declare(strict_types=1);
 
 namespace Linna\Psr7;
 
@@ -50,7 +50,7 @@ trait UriTrait
      * 
      * @param int $port
      * @param string $scheme
-     * @param string $standardScheme
+     * @param bool $standardScheme
      * @param array $supportedSchemes
      * 
      * @return int
@@ -58,7 +58,7 @@ trait UriTrait
     private function getNonStandardPort(
             int $port, 
             string $scheme, 
-            string $standardScheme, 
+            bool $standardScheme, 
             array $supportedSchemes
             ) : int
     {
@@ -68,12 +68,12 @@ trait UriTrait
     /**
      * Get port for standard scheme.
      * 
-     * @param int $standardPort
+     * @param bool $standardPort
      * @param int $port
      * 
      * @return int
      */
-    private function getPortForStandardScheme(int $standardPort, int $port) : int
+    private function getPortForStandardScheme(bool $standardPort, int $port) : int
     {
         return ($standardPort) ? 0 : $port;
     }
