@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Linna Psr7
+ * Linna Psr7.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
  * @copyright (c) 2017, Sebastian Rapetti
@@ -19,72 +19,70 @@ trait UriTrait
 {
     /**
      * Create uri string.
-     * 
+     *
      * @param string $scheme
      * @param string $authority
      * @param string $path
      * @param string $query
      * @param string $fragment
-     * 
+     *
      * @return string
      */
     private function createUriString(
-            string $scheme, 
-            string $authority, 
-            string $path, 
-            string $query, 
+            string $scheme,
+            string $authority,
+            string $path,
+            string $query,
             string $fragment
-            ) : string
-    {
+            ) : string {
         $uri = $scheme.$authority;
-        
+
         $uri .= ('/' !== substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
 
         $uri .= $query.$fragment;
-        
+
         return $uri;
     }
-    
+
     /**
      * Get non standard port.
-     * 
-     * @param int $port
+     *
+     * @param int    $port
      * @param string $scheme
-     * @param bool $standardScheme
-     * @param array $supportedSchemes
-     * 
+     * @param bool   $standardScheme
+     * @param array  $supportedSchemes
+     *
      * @return int
      */
     private function getNonStandardPort(
-            int $port, 
-            string $scheme, 
-            bool $standardScheme, 
+            int $port,
+            string $scheme,
+            bool $standardScheme,
             array $supportedSchemes
-            ) : int
-    {
+            ) : int {
         return (!$port && $standardScheme) ? $supportedSchemes[$scheme] : $port;
     }
-    
+
     /**
      * Get port for standard scheme.
-     * 
+     *
      * @param bool $standardPort
-     * @param int $port
-     * 
+     * @param int  $port
+     *
      * @return int
      */
     private function getPortForStandardScheme(bool $standardPort, int $port) : int
     {
         return ($standardPort) ? 0 : $port;
     }
-    
+
     /**
      * Check standard port for current scheme.
-     * 
+     *
      * @param string $scheme
-     * @param int $port
-     * @param array $supportedSchemes
-     * 
+     * @param int    $port
+     * @param array  $supportedSchemes
+     *
      * @return bool
      */
     private function checkStandardPortForCurretScheme(string $scheme, int $port, array $supportedSchemes) : bool
