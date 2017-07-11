@@ -6,8 +6,8 @@
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
  * @copyright (c) 2017, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
- *
  */
+declare(strict_types=1);
 
 namespace Linna\Psr7;
 
@@ -189,7 +189,7 @@ class Uri implements UriInterface
      */
     public function withHost(string $host) : UriInterface
     {
-        if (filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false){
+        if (filter_var($host, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME) === false){
             throw new InvalidArgumentException(__CLASS__.': Invalid host provided for '.__METHOD__);
         }
         
