@@ -4,7 +4,7 @@
  * Linna Psr7.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2017, Sebastian Rapetti
+ * @copyright (c) 2018, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -22,7 +22,7 @@ class Uri implements UriInterface
     use UriTrait;
 
     /**
-     * @var array Standard schemes
+     * @var array Standard schemes.
      */
     protected $standardSchemes = [
         'http'  => 80,
@@ -30,7 +30,7 @@ class Uri implements UriInterface
     ];
 
     /**
-     * @var array Url description
+     * @var array Url description.
      */
     protected $url = [
         'scheme'   => '',
@@ -268,10 +268,12 @@ class Uri implements UriInterface
         $query = $this->url['query'];
         $fragment = $this->url['fragment'];
 
-        return $this->createUriString(($scheme !== '') ? $scheme.'://' : '',
+        return $this->createUriString(
+            ($scheme !== '') ? $scheme.'://' : '',
                $this->getAuthority(),
                $this->getPath(),
                ($query !== '') ? '?'.$query : '',
-               ($fragment !== '') ? '#'.$fragment : '');
+               ($fragment !== '') ? '#'.$fragment : ''
+        );
     }
 }

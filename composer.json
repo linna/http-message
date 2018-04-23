@@ -16,7 +16,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "s3b4stian/http-message": "dev-master"
+        "s3b4stian/http-message": "dev-master",
+        "linna/typed-array" :  "^1.0"
     },
     "provide": {
         "psr/http-message-implementation": "1.0"
