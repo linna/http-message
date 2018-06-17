@@ -16,18 +16,18 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * HTTP Psr7 Message implementation
+ * HTTP Psr7 Message implementation.
  */
 abstract class Message implements MessageInterface
 {
     /**
-    * @var string Protocol version.
-    */
+     * @var string Protocol version.
+     */
     protected $protocolVersion = '1.1';
 
     /**
-    * @var array Allowed protocol versions.
-    */
+     * @var array Allowed protocol versions.
+     */
     protected static $allowedProtocolVersions = [
         '1.0' => true,
         '1.1' => true,
@@ -92,7 +92,7 @@ abstract class Message implements MessageInterface
     {
         $this->normalize($name);
 
-        return isset($this->headers[$name]) ?  $this->headers[$name] : [];
+        return isset($this->headers[$name]) ? $this->headers[$name] : [];
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class Message implements MessageInterface
     {
         $this->normalize($name);
 
-        return isset($this->headers[$name]) ?  implode(', ', $this->headers[$name]) : '';
+        return isset($this->headers[$name]) ? implode(', ', $this->headers[$name]) : '';
     }
 
     /**
