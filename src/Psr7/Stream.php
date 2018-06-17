@@ -24,12 +24,12 @@ class Stream implements StreamInterface
      * @var resource The streem resource.
      */
     protected $resource;
-    
+
     /**
      * @var bool Is stream a proces file pointer?
      */
     protected $isPipe;
-    
+
     /**
      * Constructor.
      *
@@ -48,7 +48,7 @@ class Stream implements StreamInterface
         $this->resource = $resource;
         $this->isPipe = $this->checkFileMode($resource);
     }
-    
+
     /**
      * Check if file is a pipe.
      * http://man7.org/linux/man-pages/man7/inode.7.html
@@ -56,7 +56,7 @@ class Stream implements StreamInterface
      * @param type $resource
      * @return bool
      */
-    protected function checkFileMode($resource) : bool
+    protected function checkFileMode($resource): bool
     {
         //file modes
         //check if resource is a process file pointer.
@@ -69,11 +69,11 @@ class Stream implements StreamInterface
         //0010000   FIFO
         return ((fstat($resource)['mode'] & 0010000) !== 0) ? true: false;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         try {
             $this->rewind();
@@ -101,7 +101,7 @@ class Stream implements StreamInterface
         fclose($this->resource);
         $this->resource = null;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -110,17 +110,17 @@ class Stream implements StreamInterface
         if (!$this->resource) {
             return;
         }
-        
+
         $tmpResource = $this->resource;
         $this->resource = false;
-        
+
         return $tmpResource;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSize() : int
+    public function getSize(): int
     {
         return (!$this->resource) ? 0 : fstat($this->resource)['size'];
     }
@@ -128,23 +128,23 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function tell() : int
+    public function tell(): int
     {
         if (!$this->resource) {
             throw new RuntimeException(__CLASS__.': No resource available; cannot tell position');
         }
-        
+
         if (($position = ftell($this->resource)) === false) {
             throw new RuntimeException(__CLASS__.': Error occurred during tell operation');
         }
-        
+
         return $position;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function eof() : bool
+    public function eof(): bool
     {
         return (!$this->resource) ? feof($this->resource) : true;
     }
@@ -152,7 +152,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isSeekable() : bool
+    public function isSeekable(): bool
     {
         return (!$this->resource) ? false : stream_get_meta_data($this->resource)['seekable'];
     }
@@ -165,11 +165,11 @@ class Stream implements StreamInterface
         if (!$this->isSeekable()) {
             throw new RuntimeException(__CLASS__.': Can not seek the stream');
         }
-        
+
         if (fseek($this->resource, $offset, $whence) !== 0) {
             throw new RuntimeException(__CLASS__.': Error seeking within stream');
         }
-        
+
         return true;
     }
 
@@ -186,51 +186,51 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    protected function can(array $modes) : bool
+    protected function can(array $modes): bool
     {
         $metaMode = stream_get_meta_data($this->resource)['mode'];
-        
+
         foreach ($modes as $mode) {
             if (strpos($metaMode, $mode) !== false) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function isWritable() : bool
+    public function isWritable(): bool
     {
         return (!$this->resource) ? false : $this->can(['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+']);
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function write(string $string) : int
+    public function write(string $string): int
     {
         //if (!$this->resource) {
         //    throw new RuntimeException(__CLASS__.': Resource not available; '.__METHOD__);
         //}
-        
+
         if (!$this->isWritable()) {
             throw new RuntimeException(__CLASS__.': Stream is not writable; '.__METHOD__);
         }
-        
+
         if (($bytes = fwrite($this->resource, $string)) === false) {
             throw new RuntimeException(__CLASS__.': Error writing stream; '.__METHOD__);
         }
-        
+
         return $bytes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isReadable() : bool
+    public function isReadable(): bool
     {
         return (!$this->resource) ? false : $this->can(['r', 'r+', 'w+', 'a+', 'x+', 'c+']);
     }
@@ -238,46 +238,46 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function read(int $length) : string
+    public function read(int $length): string
     {
         //if (!$this->resource) {
         //    throw new RuntimeException(__CLASS__.': Resource not available; '.__METHOD__);
         //}
-        
+
         if (!$this->isReadable()) {
             throw new RuntimeException(__CLASS__.': Stream is not readable; '.__METHOD__);
         }
-        
+
         if (($data = fread($this->resource, $length)) === false) {
             throw new RuntimeException(__CLASS__.': Error reading stream; '.__METHOD__);
         }
-        
+
         return $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getContents() : string
+    public function getContents(): string
     {
         if (!$this->isReadable()) {
             throw new RuntimeException(__CLASS__.': Stream is not readable; '.__METHOD__);
         }
-        
+
         if (($content = stream_get_contents($this->resource)) === false) {
             throw new RuntimeException(__CLASS__.': Error reading stream; '.__METHOD__);
         }
-        
+
         return $content;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMetadata(string $key = '') : array
+    public function getMetadata(string $key = ''): array
     {
         $metadata = stream_get_meta_data($this->resource);
-        
+
         //if key is empty strung
         return ($key === '') ?
             //return metadata

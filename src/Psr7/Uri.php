@@ -62,7 +62,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getScheme() : string
+    public function getScheme(): string
     {
         return strtolower($this->url['scheme']);
     }
@@ -70,7 +70,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getAuthority() : string
+    public function getAuthority(): string
     {
         if ($this->url['host'] === '') {
             return '';
@@ -92,7 +92,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getUserInfo() : string
+    public function getUserInfo(): string
     {
         $user = $this->url['user'];
 
@@ -106,7 +106,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getHost() : string
+    public function getHost(): string
     {
         return strtolower($this->url['host']);
     }
@@ -114,7 +114,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getPort() : int
+    public function getPort(): int
     {
         $scheme = $this->url['scheme'];
         $port = $this->url['port'];
@@ -136,7 +136,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->url['path'];
     }
@@ -144,7 +144,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getQuery() : string
+    public function getQuery(): string
     {
         return $this->url['query'];
     }
@@ -152,7 +152,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function getFragment() : string
+    public function getFragment(): string
     {
         return $this->url['fragment'];
     }
@@ -160,7 +160,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withScheme(string $scheme) : UriInterface
+    public function withScheme(string $scheme): UriInterface
     {
         if (!array_key_exists($scheme, $this->standardSchemes)) {
             throw new InvalidArgumentException(__CLASS__.': Invalid or unsupported scheme provided for '.__METHOD__);
@@ -175,7 +175,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withUserInfo(string $user, string $password = '') : UriInterface
+    public function withUserInfo(string $user, string $password = ''): UriInterface
     {
         $new = clone $this;
         $new->url['user'] = $user;
@@ -187,7 +187,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withHost(string $host) : UriInterface
+    public function withHost(string $host): UriInterface
     {
         if (filter_var($host, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME) === false) {
             throw new InvalidArgumentException(__CLASS__.': Invalid host provided for '.__METHOD__);
@@ -202,7 +202,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withPort(int $port = 0) : UriInterface
+    public function withPort(int $port = 0): UriInterface
     {
         if ($port !== 0 && ($port < 1 || $port > 65535)) {
             throw new \InvalidArgumentException(__CLASS__.': Invalid port ('.$port.') number provided for '.__METHOD__);
@@ -217,7 +217,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withPath(string $path) : UriInterface
+    public function withPath(string $path): UriInterface
     {
         if (strpos($path, '?') !== false) {
             throw new \InvalidArgumentException(__CLASS__.': Invalid path provided; must not contain a query string');
@@ -236,7 +236,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withQuery(string $query) : UriInterface
+    public function withQuery(string $query): UriInterface
     {
         if (strpos($query, '#') !== false) {
             throw new \InvalidArgumentException(__CLASS__.': Query string must not include a URI fragment');
@@ -251,7 +251,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function withFragment(string $fragment) : UriInterface
+    public function withFragment(string $fragment): UriInterface
     {
         $new = clone $this;
         $new->url['fragment'] = (strpos($fragment, '#') !== false) ? substr($fragment, 1) : $fragment;
@@ -262,7 +262,7 @@ class Uri implements UriInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         $scheme = $this->url['scheme'];
         $query = $this->url['query'];

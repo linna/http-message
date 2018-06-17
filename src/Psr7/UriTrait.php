@@ -34,7 +34,7 @@ trait UriTrait
             string $path,
             string $query,
             string $fragment
-            ) : string {
+            ): string {
         $uri = $scheme.$authority;
 
         $uri .= ('/' !== substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
@@ -59,7 +59,7 @@ trait UriTrait
             string $scheme,
             bool $standardScheme,
             array $supportedSchemes
-            ) : int {
+            ): int {
         return (!$port && $standardScheme) ? $supportedSchemes[$scheme] : $port;
     }
 
@@ -71,7 +71,7 @@ trait UriTrait
      *
      * @return int
      */
-    private function getPortForStandardScheme(bool $standardPort, int $port) : int
+    private function getPortForStandardScheme(bool $standardPort, int $port): int
     {
         return ($standardPort) ? 0 : $port;
     }
@@ -85,7 +85,7 @@ trait UriTrait
      *
      * @return bool
      */
-    private function checkStandardPortForCurretScheme(string $scheme, int $port, array $supportedSchemes) : bool
+    private function checkStandardPortForCurretScheme(string $scheme, int $port, array $supportedSchemes): bool
     {
         return (isset($supportedSchemes[$scheme]) && $port === $supportedSchemes[$scheme]) ? true : false;
     }

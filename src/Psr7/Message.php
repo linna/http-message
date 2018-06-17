@@ -38,16 +38,16 @@ abstract class Message implements MessageInterface
      * @var array Message headers .
      */
     protected $headers = [];
-    
+
     /**
      * @var StreamInterface Body of the message.
      */
     protected $body;
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getProtocolVersion() : string
+    public function getProtocolVersion(): string
     {
         return $this->protocolVersion;
     }
@@ -55,7 +55,7 @@ abstract class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function withProtocolVersion(string $version) : MessageInterface
+    public function withProtocolVersion(string $version): MessageInterface
     {
         if (!isset(self::$validProtocolVersions[$version])) {
             throw new InvalidArgumentException(__CLASS__.': Invalid HTTP protocol version. Must be 1.0, 1.1 or 2.0');
@@ -70,7 +70,7 @@ abstract class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function getHeaders() : array
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -78,91 +78,91 @@ abstract class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasHeader(string $name) : bool
+    public function hasHeader(string $name): bool
     {
         $this->normalize($name);
-        
+
         return isset($this->headers[$name]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getHeader(string $name) : array
+    public function getHeader(string $name): array
     {
         $this->normalize($name);
-                
+
         return isset($this->headers[$name]) ?  $this->headers[$name] : [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getHeaderLine(string $name) : string
+    public function getHeaderLine(string $name): string
     {
         $this->normalize($name);
-        
+
         return isset($this->headers[$name]) ?  implode(', ', $this->headers[$name]) : '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function withHeader(string $name, array $value) : MessageInterface
+    public function withHeader(string $name, array $value): MessageInterface
     {
         $this->normalize($name);
-        
+
         $new = clone $this;
-        
+
         //use typed array for assicure that array contains only strings
         $new->headers[$name] = (new TypedArray('string', $value))->getArrayCopy();
-        
+
         return $new;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function withAddedHeader(string $name, array $value) : MessageInterface
+    public function withAddedHeader(string $name, array $value): MessageInterface
     {
         $this->normalize($name);
-        
+
         //use typed array for assicure that array contains only strings
         $headerValue = (new TypedArray('string', $value))->getArrayCopy();
-        
+
         $new = clone $this;
-        
+
         //check if header exist
         if (!isset($this->headers[$name])) {
             $new->headers[$name] = $headerValue;
-        
+
             return $new;
         }
-        
+
         //at this point header exists
         //remain only to append new value to existing header
         $new->headers[$name] = array_merge($this->headers[$name], $headerValue);
-        
+
         return $new;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function withoutHeader(string $name) : MessageInterface
+    public function withoutHeader(string $name): MessageInterface
     {
         $this->normalize($name);
-        
+
         $new = clone $this;
         unset($new->headers[$name]);
-        
+
         return $new;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBody() : StreamInterface
+    public function getBody(): StreamInterface
     {
         return $this->body;
     }
@@ -170,11 +170,11 @@ abstract class Message implements MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function withBody(StreamInterface $body) : MessageInterface
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $new = clone $this;
         $new->body = $body;
-        
+
         return $new;
     }
 

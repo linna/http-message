@@ -48,7 +48,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function wrongArgumentProvider() : array
+    public function wrongArgumentProvider(): array
     {
         return [
             [1],
@@ -78,7 +78,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function authorityProvider() : array
+    public function authorityProvider(): array
     {
         return [
             ['http://username:password@hostname.com:9090', 'username:password@hostname.com:9090'],
@@ -105,7 +105,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function portProvider() : array
+    public function portProvider(): array
     {
         return [
             ['http', ':80', 0], //standard scheme, standard port - return zero
@@ -267,7 +267,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function wrongPortTypeProvider() : array
+    public function wrongPortTypeProvider(): array
     {
         return [
             ['1'],
@@ -343,7 +343,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function uriProvider() : array
+    public function uriProvider(): array
     {
         return[
             ['http://username:password@hostname.com:8080/path?arg=value#anchor'],
@@ -376,7 +376,7 @@ class UriTest extends TestCase
      *
      * @return array
      */
-    public function queryProvider() : array
+    public function queryProvider(): array
     {
         return [
             ['?arg1=foo&arg2=foo&arg3=baz', 'arg1=foo&arg2=foo&arg3=baz', 'http://username:password@hostname.com:9090/path?arg1=foo&arg2=foo&arg3=baz#anchor'],
@@ -423,7 +423,7 @@ class UriTest extends TestCase
         (new Uri($this->uri))->withQuery('arg=foo#anchor2');
     }
 
-    public function fragmentProvider() : array
+    public function fragmentProvider(): array
     {
         return [
             ['otherAnchor', 'otherAnchor', 'http://username:password@hostname.com:9090/path?arg=value#otherAnchor'],

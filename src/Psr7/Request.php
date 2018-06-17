@@ -36,7 +36,7 @@ class Request extends Message implements RequestInterface
      *
      * @return string
      */
-    public function getRequestTarget() : string
+    public function getRequestTarget(): string
     {
     }
 
@@ -57,7 +57,7 @@ class Request extends Message implements RequestInterface
      * @param mixed $requestTarget
      * @return static
      */
-    public function withRequestTarget(string $requestTarget) : RequestInterface
+    public function withRequestTarget(string $requestTarget): RequestInterface
     {
     }
 
@@ -66,7 +66,7 @@ class Request extends Message implements RequestInterface
      *
      * @return string Returns the request method.
      */
-    public function getMethod() : string
+    public function getMethod(): string
     {
     }
 
@@ -85,7 +85,7 @@ class Request extends Message implements RequestInterface
      * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod(string $method) : RequestInterface
+    public function withMethod(string $method): RequestInterface
     {
     }
 
@@ -98,7 +98,7 @@ class Request extends Message implements RequestInterface
      * @return UriInterface Returns a UriInterface instance
      *     representing the URI of the request.
      */
-    public function getUri() : UriInterface
+    public function getUri(): UriInterface
     {
     }
 
@@ -132,7 +132,7 @@ class Request extends Message implements RequestInterface
      * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(UriInterface $uri, bool $preserveHost = false) : RequestInterface
+    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
     }
 }
