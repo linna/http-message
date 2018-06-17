@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Linna\Psr7;
 
-use Psr\Http\Message\StreamInterface;
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 /**
@@ -33,7 +33,7 @@ class Stream implements StreamInterface
     /**
      * Constructor.
      *
-     * @param Resource $resource
+     * @param resource $resource
      */
     public function __construct($resource)
     {
@@ -51,9 +51,10 @@ class Stream implements StreamInterface
 
     /**
      * Check if file is a pipe.
-     * http://man7.org/linux/man-pages/man7/inode.7.html
+     * http://man7.org/linux/man-pages/man7/inode.7.html.
      *
      * @param type $resource
+     *
      * @return bool
      */
     protected function checkFileMode($resource): bool
@@ -67,7 +68,7 @@ class Stream implements StreamInterface
         //0040000   directory
         //0020000   character device
         //0010000   FIFO
-        return ((fstat($resource)['mode'] & 0010000) !== 0) ? true: false;
+        return ((fstat($resource)['mode'] & 0010000) !== 0) ? true : false;
     }
 
     /**
@@ -77,6 +78,7 @@ class Stream implements StreamInterface
     {
         try {
             $this->rewind();
+
             return $this->getContents();
         } catch (RuntimeException $e) {
             return '';
@@ -95,6 +97,7 @@ class Stream implements StreamInterface
         if ($this->isPipe) {
             pclose($this->resource);
             $this->resource = null;
+
             return;
         }
 
