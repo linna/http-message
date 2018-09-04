@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Linna\Psr7;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -52,7 +53,7 @@ class Request extends Message implements RequestInterface
      * changed request target.
      *
      * @link http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
-     *     request-target forms allowed in request messages)
+     *       request-target forms allowed in request messages)
      *
      * @param mixed $requestTarget
      *
@@ -84,7 +85,7 @@ class Request extends Message implements RequestInterface
      *
      * @param string $method Case-sensitive method.
      *
-     * @throws \InvalidArgumentException for invalid HTTP methods.
+     * @throws InvalidArgumentException for invalid HTTP methods.
      *
      * @return static
      */

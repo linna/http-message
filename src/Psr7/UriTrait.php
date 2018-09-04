@@ -37,11 +37,9 @@ trait UriTrait
             ): string {
         $uri = $scheme.$authority;
 
-        $uri .= ('/' !== substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
+        $path = ('/' !== substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
 
-        $uri .= $query.$fragment;
-
-        return $uri;
+        return implode('', [$uri, $path, $query, $fragment]);
     }
 
     /**

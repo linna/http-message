@@ -9,6 +9,8 @@
  */
 declare(strict_types=1);
 
+namespace Linna\Tests;
+
 use Linna\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +21,7 @@ class UriTest extends TestCase
     /**
      * Test new instance.
      */
-    public function testNewInstance()
+    public function testNewInstance(): void
     {
         $uri = new Uri($this->uri);
 
@@ -38,7 +40,7 @@ class UriTest extends TestCase
      *
      * @expectedException InvalidArgumentException
      */
-    public function testNewInstanceWithWrongUri()
+    public function testNewInstanceWithWrongUri(): void
     {
         (new Uri('http:///example.com'));
     }
@@ -68,7 +70,7 @@ class UriTest extends TestCase
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
      */
-    public function testNewInstanceWithWrongArgumentType($argument)
+    public function testNewInstanceWithWrongArgumentType($argument): void
     {
         (new Uri($argument));
     }
@@ -95,7 +97,7 @@ class UriTest extends TestCase
      *
      * @dataProvider authorityProvider
      */
-    public function testGetAuthority(string $autority, string $expected)
+    public function testGetAuthority(string $autority, string $expected): void
     {
         $this->assertEquals($expected, (new Uri("{$autority}/path?arg=value#anchor"))->getAuthority());
     }
@@ -121,7 +123,7 @@ class UriTest extends TestCase
      *
      * @dataProvider portProvider
      */
-    public function testGetPort(string $scheme, string $port, int $expected)
+    public function testGetPort(string $scheme, string $port, int $expected): void
     {
         $this->assertEquals($expected, (new Uri("{$scheme}://username:password@hostname.com{$port}/path?arg=value#anchor"))->getPort());
     }
@@ -129,7 +131,7 @@ class UriTest extends TestCase
     /**
      * Test with scheme.
      */
-    public function testWithScheme()
+    public function testWithScheme(): void
     {
         $uri = (new Uri($this->uri))->withScheme('https');
 
@@ -141,7 +143,7 @@ class UriTest extends TestCase
      *
      * @expectedException InvalidArgumentException
      */
-    public function testWithSchemeWithUnsupportedScheme()
+    public function testWithSchemeWithUnsupportedScheme(): void
     {
         (new Uri($this->uri))->withScheme('httpss');
     }
@@ -152,7 +154,7 @@ class UriTest extends TestCase
      * @expectedException TypeError
      * @dataProvider wrongArgumentProvider
      */
-    public function testWithSchemeWithWrongSchemeType($argument)
+    public function testWithSchemeWithWrongSchemeType($argument): void
     {
         (new Uri($this->uri))->withScheme($argument);
     }
@@ -160,7 +162,7 @@ class UriTest extends TestCase
     /**
      * Test with user info.
      */
-    public function testWithUserInfo()
+    public function testWithUserInfo(): void
     {
         $uri = (new Uri($this->uri))->withUserInfo('testUser', 'password');
 
@@ -170,7 +172,7 @@ class UriTest extends TestCase
     /**
      * Test user info without password.
      */
-    public function testWithUserInfoWithoutPassword()
+    public function testWithUserInfoWithoutPassword(): void
     {
         $uri = (new Uri($this->uri))->withUserInfo('testUser');
 
@@ -180,7 +182,7 @@ class UriTest extends TestCase
     /**
      * Test user info without user and password.
      */
-    public function testWithUserInfoWithoutUserAndPassword()
+    public function testWithUserInfoWithoutUserAndPassword(): void
     {
         $uri = (new Uri($this->uri))->withUserInfo('');
 
@@ -190,7 +192,7 @@ class UriTest extends TestCase
     /**
      * Test with host.
      */
-    public function testWithHost()
+    public function testWithHost(): void
     {
         $uri = (new Uri($this->uri))->withHost('example.com');
 
@@ -202,7 +204,7 @@ class UriTest extends TestCase
      *
      * @expectedException InvalidArgumentException
      */
-    public function testWithHostWithInvalidHostFormat()
+    public function testWithHostWithInvalidHostFormat(): void
     {
         (new Uri($this->uri))->withHost('host?name');
     }
@@ -213,7 +215,7 @@ class UriTest extends TestCase
      * @expectedException TypeError
      * @dataProvider wrongArgumentProvider
      */
-    public function testWithHostWithWrongHostType($argument)
+    public function testWithHostWithWrongHostType($argument): void
     {
         (new Uri($this->uri))->withHost($argument);
     }
@@ -221,7 +223,7 @@ class UriTest extends TestCase
     /**
      * Test with port.
      */
-    public function testWithPort()
+    public function testWithPort(): void
     {
         $uri = (new Uri($this->uri))->withPort(8080);
 
@@ -231,7 +233,7 @@ class UriTest extends TestCase
     /**
      * Test with null port.
      */
-    public function testWithPortNullPort()
+    public function testWithPortNullPort(): void
     {
         $uri = (new Uri($this->uri))->withPort();
 
@@ -257,7 +259,7 @@ class UriTest extends TestCase
      * @dataProvider outOfRangePortProvider
      * @expectedException InvalidArgumentException
      */
-    public function testWithPortWithOutOfRangePort(int $port)
+    public function testWithPortWithOutOfRangePort(int $port): void
     {
         (new Uri($this->uri))->withPort($port);
     }
@@ -289,7 +291,7 @@ class UriTest extends TestCase
      * @dataProvider wrongPortTypeProvider
      * @expectedException TypeError
      */
-    public function testWithPortWithWrongPortType($port)
+    public function testWithPortWithWrongPortType($port): void
     {
         (new Uri($this->uri))->withPort($port);
     }
@@ -297,7 +299,7 @@ class UriTest extends TestCase
     /**
      * Test with path.
      */
-    public function testWithPath()
+    public function testWithPath(): void
     {
         $uri = (new Uri($this->uri))->withPath('/otherpath');
 
@@ -311,7 +313,7 @@ class UriTest extends TestCase
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
      */
-    public function testWithPathWithWrongPathType($path)
+    public function testWithPathWithWrongPathType($path): void
     {
         (new Uri($this->uri))->withPath($path);
     }
@@ -322,7 +324,7 @@ class UriTest extends TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Linna\Psr7\Uri: Invalid path provided; must not contain a query string
      */
-    public function testWithPathPassingQueryString()
+    public function testWithPathPassingQueryString(): void
     {
         (new Uri($this->uri))->withPath('/otherPath?arg=value');
     }
@@ -333,7 +335,7 @@ class UriTest extends TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Linna\Psr7\Uri: Invalid path provided; must not contain a URI fragment
      */
-    public function testWithPathPassingFragment()
+    public function testWithPathPassingFragment(): void
     {
         (new Uri($this->uri))->withPath('/otherPath#anchor');
     }
@@ -366,7 +368,7 @@ class UriTest extends TestCase
      *
      * @dataProvider uriProvider
      */
-    public function testUriToString(string $testUri)
+    public function testUriToString(string $testUri): void
     {
         $this->assertEquals($testUri, (string) (new Uri($testUri)));
     }
@@ -394,7 +396,7 @@ class UriTest extends TestCase
      *
      * @dataProvider queryProvider
      */
-    public function testWithQuery(string $withQuery, string $expectedQuery, string $expectedUri)
+    public function testWithQuery(string $withQuery, string $expectedQuery, string $expectedUri): void
     {
         $uri = (new Uri($this->uri))->withQuery($withQuery);
 
@@ -408,7 +410,7 @@ class UriTest extends TestCase
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
      */
-    public function testWithQueryWithWrongQueryType($query)
+    public function testWithQueryWithWrongQueryType($query): void
     {
         (new Uri($this->uri))->withQuery($query);
     }
@@ -418,11 +420,16 @@ class UriTest extends TestCase
      *
      * @expectedException InvalidArgumentException
      */
-    public function testWithQueryPassingFragment()
+    public function testWithQueryPassingFragment(): void
     {
         (new Uri($this->uri))->withQuery('arg=foo#anchor2');
     }
 
+    /**
+     * Fragment provider.
+     *
+     * @return array
+     */
     public function fragmentProvider(): array
     {
         return [
@@ -441,7 +448,7 @@ class UriTest extends TestCase
      *
      * @dataProvider fragmentProvider
      */
-    public function testWithFragment(string $withFragment, string $expectedFragment, string $expectedUri)
+    public function testWithFragment(string $withFragment, string $expectedFragment, string $expectedUri): void
     {
         $uri = (new Uri($this->uri))->withFragment($withFragment);
 
@@ -455,7 +462,7 @@ class UriTest extends TestCase
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
      */
-    public function testWithFragmentWithWrongFragmentType($fragment)
+    public function testWithFragmentWithWrongFragmentType($fragment): void
     {
         (new Uri($this->uri))->withFragment($fragment);
     }

@@ -15,9 +15,14 @@
         "issues": "https://github.com/linna/psr7/issues"
     },
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "s3b4stian/http-message": "dev-master",
-        "linna/typed-array" :  "^1.0"
+        "linna/typed-array" :  "^2.0"
+    },
+    "require-dev": {
+        "infection/infection": "^0.9",
+        "phpstan/phpstan": "^0.10",
+        "phpunit/phpunit": "^7.0"
     },
     "provide": {
         "psr/http-message-implementation": "1.0"
@@ -25,6 +30,11 @@
     "autoload": {
         "psr-4": {
             "Linna\\Psr7\\": "src/Psr7/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Linna\\Tests\\":  ["tests/", "tests/Rules"]
         }
     }
 }
