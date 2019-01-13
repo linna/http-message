@@ -5,7 +5,7 @@
 <br/>
 
 <div align="center">
-    <a href="#"><img src="logo-psr7.png" alt="Linna dotenv Logo"></a>
+    <a href="#"><img src="logo-http-message.png" alt="Linna dotenv Logo"></a>
 </div>
 
 <br/>
