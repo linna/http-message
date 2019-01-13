@@ -12,7 +12,7 @@
 
 <div align="center">
 
-[![Build Status](https://travis-ci.org/s3b4stian/http-message.svg?branch=master)](https://travis-ci.org/s3b4stian/http-message)
+[![Build Status](https://travis-ci.org/linna/http-message.svg?branch=master)](https://travis-ci.org/linna/http-message)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/http-message/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/linna/http-message/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![StyleCI](https://github.styleci.io/repos/96924222/shield?branch=master&style=flat)](https://github.styleci.io/repos/96924222)
@@ -33,5 +33,5 @@ This package require php 7.1
 # Installation
 With composer:
 ```
-composer require linna/psr7
+composer require linna/http-message
 ```
