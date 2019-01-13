@@ -12,10 +12,10 @@
 
 <div align="center">
 
-[![Build Status](https://travis-ci.org/linna/psr7.svg?branch=master)](https://travis-ci.org/linna/psr7)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/psr7/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/psr7/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/linna/psr7/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/psr7/?branch=master)
-[![StyleCI](https://styleci.io/repos/96924222/shield?branch=master&style=flat)](https://styleci.io/repos/96924222)
+[![Build Status](https://travis-ci.org/s3b4stian/http-message.svg?branch=master)](https://travis-ci.org/s3b4stian/http-message)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/http-message/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/linna/http-message/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
+[![StyleCI](https://github.styleci.io/repos/96924222/shield?branch=master&style=flat)](https://github.styleci.io/repos/96924222)
 [![PHP 7.1](https://img.shields.io/badge/PHP-7.1-8892BF.svg)](http://php.net)
 
 </div>
