@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Linna\Tests;
 
-use Linna\Psr7\Uri;
+use Linna\Http\Message\Uri;
 use PHPUnit\Framework\TestCase;
 
 class UriTest extends TestCase
@@ -322,7 +322,7 @@ class UriTest extends TestCase
      * Test with path passing query string.
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Linna\Psr7\Uri: Invalid path provided; must not contain a query string
+     * @expectedExceptionMessage Linna\Http\Message\Uri: Invalid path provided; must not contain a query string
      */
     public function testWithPathPassingQueryString(): void
     {
@@ -333,7 +333,7 @@ class UriTest extends TestCase
      * Test with path passing fragment.
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Linna\Psr7\Uri: Invalid path provided; must not contain a URI fragment
+     * @expectedExceptionMessage Linna\Http\Message\Uri: Invalid path provided; must not contain a URI fragment
      */
     public function testWithPathPassingFragment(): void
     {

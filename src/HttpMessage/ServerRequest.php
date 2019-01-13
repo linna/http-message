@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace Linna\Psr7;
+namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;

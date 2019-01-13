@@ -1,7 +1,7 @@
 {
-    "name": "linna/psr7",
+    "name": "linna/http-message",
     "type": "library",
-    "description": "Linna Psr7",
+    "description": "Linna PSR-7 implementation",
     "keywords": ["psr7", "psr", "http", "http-message", "php"],
     "homepage": "https://github.com/linna/psr7",
     "license": "MIT",
@@ -12,7 +12,7 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/linna/psr7/issues"
+        "issues": "https://github.com/linna/http-message/issues"
     },
     "require": {
         "php": ">=7.1",
@@ -20,7 +20,7 @@
         "linna/typed-array" :  "^2.0"
     },
     "require-dev": {
-        "infection/infection": "^0.9",
+        "infection/infection": "^0.11",
         "phpstan/phpstan": "^0.10",
         "phpunit/phpunit": "^7.0"
     },
@@ -29,7 +29,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Linna\\Psr7\\": "src/Psr7/"
+            "Linna\\Http\\Message\\": "src/HttpMessage/"
         }
     },
     "autoload-dev": {
