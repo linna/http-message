@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Linna PSR-7 implementation",
     "keywords": ["psr7", "psr", "http", "http-message", "php"],
-    "homepage": "https://github.com/linna/psr7",
+    "homepage": "https://github.com/linna/http-message",
     "license": "MIT",
     "authors": [
         {
