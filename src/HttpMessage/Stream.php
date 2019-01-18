@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -16,7 +16,7 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 /**
- * Psr7 Stream implementation.
+ * PSR-7 Stream implementation.
  */
 class Stream implements StreamInterface
 {
@@ -26,49 +26,42 @@ class Stream implements StreamInterface
     protected $resource;
 
     /**
-     * @var bool Is stream a proces file pointer?
-     */
-    protected $isPipe;
-
-    /**
-     * Constructor.
+     * Class Constructor.
      *
-     * @param mixed $resource
+     * @param string|resource $stream
+     * @param string $mode
+     *
+     * @throws InvalidArgumentException
      */
-    public function __construct($resource)
+    public function __construct($stream, string $mode = 'r')
     {
-        if (!is_resource($resource)) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid resource provided');
+        if (is_string($stream)) {
+            $error = null;
+
+            set_error_handler(function ($e) use (&$error) {
+                if ($e === 2) {
+                    $error = $e;
+                }
+            });
+
+            $stream = fopen($stream, $mode);
+
+            restore_error_handler();
+
+            if ($error) {
+                throw new InvalidArgumentException('Invalid stream identifier provided.');
+            }
         }
 
-        if ('stream' !== get_resource_type($resource)) {
-            throw new InvalidArgumentException(__CLASS__.': Resource provided is not a stream');
+        if (!is_resource($stream)) {
+            throw new InvalidArgumentException('Invalid resource provided.');
         }
 
-        $this->resource = $resource;
-        $this->isPipe = $this->checkFileMode($resource);
-    }
+        if (get_resource_type($stream) !== 'stream') {
+            throw new InvalidArgumentException('Resource provided is not a stream.');
+        }
 
-    /**
-     * Check if file is a pipe.
-     * http://man7.org/linux/man-pages/man7/inode.7.html.
-     *
-     * @param mixed $resource
-     *
-     * @return bool
-     */
-    protected function checkFileMode($resource): bool
-    {
-        //file modes
-        //check if resource is a process file pointer.
-        //0140000   socket
-        //0120000   symbolic link
-        //0100000   regular file
-        //0060000   block device
-        //0040000   directory
-        //0020000   character device
-        //0010000   FIFO
-        return ((fstat($resource)['mode'] & 0010000) !== 0) ? true : false;
+        $this->resource = $stream;
     }
 
     /**
@@ -103,16 +96,9 @@ class Stream implements StreamInterface
      *
      * @return void
      */
-    public function close()
+    public function close(): void
     {
         if (!$this->resource) {
-            return;
-        }
-
-        if ($this->isPipe) {
-            pclose($this->resource);
-            $this->resource = null;
-
             return;
         }
 
@@ -130,13 +116,13 @@ class Stream implements StreamInterface
     public function detach()
     {
         if (!$this->resource) {
-            return;
+            return null;
         }
 
-        $tmpResource = $this->resource;
-        $this->resource = false;
+        $resource = $this->resource;
+        $this->resource = null;
 
-        return $tmpResource;
+        return $resource;
     }
 
     /**
@@ -159,11 +145,11 @@ class Stream implements StreamInterface
     public function tell(): int
     {
         if (!$this->resource) {
-            throw new RuntimeException(__CLASS__.': No resource available; cannot tell position');
+            throw new RuntimeException('Resource not available.');
         }
 
         if (($position = ftell($this->resource)) === false) {
-            throw new RuntimeException(__CLASS__.': Error occurred during tell operation');
+            throw new RuntimeException('Error occurred during tell operation.');
         }
 
         return $position;
@@ -176,7 +162,11 @@ class Stream implements StreamInterface
      */
     public function eof(): bool
     {
-        return (!$this->resource) ? feof($this->resource) : true;
+        if (!$this->resource) {
+            return true;
+        }
+
+        return feof($this->resource);
     }
 
     /**
@@ -205,12 +195,16 @@ class Stream implements StreamInterface
      */
     public function seek(int $offset, int $whence = SEEK_SET)
     {
+        if (!$this->resource) {
+            throw new RuntimeException('Resource not available.');
+        }
+
         if (!$this->isSeekable()) {
-            throw new RuntimeException(__CLASS__.': Can not seek the stream');
+            throw new RuntimeException('Can not seek the stream.');
         }
 
         if (fseek($this->resource, $offset, $whence) !== 0) {
-            throw new RuntimeException(__CLASS__.': Error seeking within stream');
+            throw new RuntimeException('Error seeking within stream.');
         }
 
         return true;
@@ -231,7 +225,7 @@ class Stream implements StreamInterface
     public function rewind()
     {
         if (!$this->isSeekable() || rewind($this->resource) === false) {
-            throw new RuntimeException(__CLASS__.': Can not rewind the stream');
+            throw new RuntimeException('Can not rewind the stream.');
         }
     }
 
@@ -276,16 +270,16 @@ class Stream implements StreamInterface
      */
     public function write(string $string): int
     {
-        //if (!$this->resource) {
-        //    throw new RuntimeException(__CLASS__.': Resource not available; '.__METHOD__);
-        //}
+        if (!$this->resource) {
+            throw new RuntimeException('Resource not available.');
+        }
 
         if (!$this->isWritable()) {
-            throw new RuntimeException(__CLASS__.': Stream is not writable; '.__METHOD__);
+            throw new RuntimeException('Stream is not writable.');
         }
 
         if (($bytes = fwrite($this->resource, $string)) === false) {
-            throw new RuntimeException(__CLASS__.': Error writing stream; '.__METHOD__);
+            throw new RuntimeException('Error writing stream.');
         }
 
         return $bytes;
@@ -315,16 +309,16 @@ class Stream implements StreamInterface
      */
     public function read(int $length): string
     {
-        //if (!$this->resource) {
-        //    throw new RuntimeException(__CLASS__.': Resource not available; '.__METHOD__);
-        //}
+        if (!$this->resource) {
+            throw new RuntimeException('Resource not available.');
+        }
 
         if (!$this->isReadable()) {
-            throw new RuntimeException(__CLASS__.': Stream is not readable; '.__METHOD__);
+            throw new RuntimeException('Stream is not readable.');
         }
 
         if (($data = fread($this->resource, $length)) === false) {
-            throw new RuntimeException(__CLASS__.': Error reading stream; '.__METHOD__);
+            throw new RuntimeException('Error reading stream.');
         }
 
         return $data;
@@ -341,11 +335,11 @@ class Stream implements StreamInterface
     public function getContents(): string
     {
         if (!$this->isReadable()) {
-            throw new RuntimeException(__CLASS__.': Stream is not readable; '.__METHOD__);
+            throw new RuntimeException('Stream is not readable.');
         }
 
         if (($content = stream_get_contents($this->resource)) === false) {
-            throw new RuntimeException(__CLASS__.': Error reading stream; '.__METHOD__);
+            throw new RuntimeException('Error reading stream.');
         }
 
         return $content;
@@ -368,9 +362,13 @@ class Stream implements StreamInterface
      */
     public function getMetadata(string $key = ''): array
     {
+        if (!$this->resource) {
+            throw new RuntimeException('Resource not available.');
+        }
+
         $metadata = stream_get_meta_data($this->resource);
 
-        //if key is empty strung
+        //if key is empty string
         return ($key === '') ?
             //return metadata
             $metadata :

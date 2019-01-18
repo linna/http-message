@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -14,17 +14,26 @@ namespace Linna\Tests;
 use Linna\Http\Message\Uri;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Uri Test
+ */
 class UriTest extends TestCase
 {
-    protected $uri = 'http://username:password@hostname.com:9090/path?arg=value#anchor';
+    /**
+     * @var string Uri for tests
+     */
+    protected static $uri = 'http://username:password@hostname.com:9090/path?arg=value#anchor';
 
     /**
      * Test new instance.
+     *
+     * @return void
      */
     public function testNewInstance(): void
     {
-        $uri = new Uri($this->uri);
+        $uri = new Uri(self::$uri);
 
+        $this->assertInstanceOf(Uri::class, $uri);
         $this->assertEquals('http', $uri->getScheme());
         $this->assertEquals('username:password', $uri->getUserInfo());
         $this->assertEquals('hostname.com', $uri->getHost());
@@ -39,6 +48,8 @@ class UriTest extends TestCase
      * Test new instance with worng uri.
      *
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testNewInstanceWithWrongUri(): void
     {
@@ -69,6 +80,8 @@ class UriTest extends TestCase
      *
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
+     *
+     * @return void
      */
     public function testNewInstanceWithWrongArgumentType($argument): void
     {
@@ -96,6 +109,8 @@ class UriTest extends TestCase
      * Test get authority.
      *
      * @dataProvider authorityProvider
+     *
+     * @return void
      */
     public function testGetAuthority(string $autority, string $expected): void
     {
@@ -122,6 +137,8 @@ class UriTest extends TestCase
      * Test get port.
      *
      * @dataProvider portProvider
+     *
+     * @return void
      */
     public function testGetPort(string $scheme, string $port, int $expected): void
     {
@@ -130,10 +147,12 @@ class UriTest extends TestCase
 
     /**
      * Test with scheme.
+     *
+     * @return void
      */
     public function testWithScheme(): void
     {
-        $uri = (new Uri($this->uri))->withScheme('https');
+        $uri = (new Uri(self::$uri))->withScheme('https');
 
         $this->assertEquals('https', $uri->getScheme());
     }
@@ -142,59 +161,72 @@ class UriTest extends TestCase
      * Test with scheme with unsupported scheme.
      *
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testWithSchemeWithUnsupportedScheme(): void
     {
-        (new Uri($this->uri))->withScheme('httpss');
+        (new Uri(self::$uri))->withScheme('httpss');
     }
 
     /**
      * Test with scheme with wrong scheme type.
      *
      * @expectedException TypeError
+     *
      * @dataProvider wrongArgumentProvider
+     *
+     * @return void
      */
     public function testWithSchemeWithWrongSchemeType($argument): void
     {
-        (new Uri($this->uri))->withScheme($argument);
+        (new Uri(self::$uri))->withScheme($argument);
     }
 
     /**
      * Test with user info.
+     *
+     * @return void
      */
     public function testWithUserInfo(): void
     {
-        $uri = (new Uri($this->uri))->withUserInfo('testUser', 'password');
+        $uri = (new Uri(self::$uri))->withUserInfo('testUser', 'password');
 
         $this->assertEquals('testUser:password', $uri->getUserInfo());
     }
 
     /**
      * Test user info without password.
+     *
+     * @return void
      */
     public function testWithUserInfoWithoutPassword(): void
     {
-        $uri = (new Uri($this->uri))->withUserInfo('testUser');
+        $uri = (new Uri(self::$uri))->withUserInfo('testUser');
 
         $this->assertEquals('testUser', $uri->getUserInfo());
     }
 
     /**
      * Test user info without user and password.
+     *
+     * @return void
      */
     public function testWithUserInfoWithoutUserAndPassword(): void
     {
-        $uri = (new Uri($this->uri))->withUserInfo('');
+        $uri = (new Uri(self::$uri))->withUserInfo('');
 
         $this->assertEquals('', $uri->getUserInfo());
     }
 
     /**
      * Test with host.
+     *
+     * @return void
      */
     public function testWithHost(): void
     {
-        $uri = (new Uri($this->uri))->withHost('example.com');
+        $uri = (new Uri(self::$uri))->withHost('example.com');
 
         $this->assertEquals('example.com', $uri->getHost());
     }
@@ -203,10 +235,12 @@ class UriTest extends TestCase
      * Test with host with invalid host format.
      *
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testWithHostWithInvalidHostFormat(): void
     {
-        (new Uri($this->uri))->withHost('host?name');
+        (new Uri(self::$uri))->withHost('host?name');
     }
 
     /**
@@ -214,28 +248,34 @@ class UriTest extends TestCase
      *
      * @expectedException TypeError
      * @dataProvider wrongArgumentProvider
+     *
+     * @return void
      */
     public function testWithHostWithWrongHostType($argument): void
     {
-        (new Uri($this->uri))->withHost($argument);
+        (new Uri(self::$uri))->withHost($argument);
     }
 
     /**
      * Test with port.
+     *
+     * @return void
      */
     public function testWithPort(): void
     {
-        $uri = (new Uri($this->uri))->withPort(8080);
+        $uri = (new Uri(self::$uri))->withPort(8080);
 
         $this->assertEquals(8080, $uri->getPort());
     }
 
     /**
      * Test with null port.
+     *
+     * @return void
      */
     public function testWithPortNullPort(): void
     {
-        $uri = (new Uri($this->uri))->withPort();
+        $uri = (new Uri(self::$uri))->withPort();
 
         $this->assertEquals(80, $uri->getPort());
     }
@@ -258,10 +298,12 @@ class UriTest extends TestCase
      *
      * @dataProvider outOfRangePortProvider
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testWithPortWithOutOfRangePort(int $port): void
     {
-        (new Uri($this->uri))->withPort($port);
+        (new Uri(self::$uri))->withPort($port);
     }
 
     /**
@@ -290,18 +332,22 @@ class UriTest extends TestCase
      *
      * @dataProvider wrongPortTypeProvider
      * @expectedException TypeError
+     *
+     * @return void
      */
     public function testWithPortWithWrongPortType($port): void
     {
-        (new Uri($this->uri))->withPort($port);
+        (new Uri(self::$uri))->withPort($port);
     }
 
     /**
      * Test with path.
+     *
+     * @return void
      */
     public function testWithPath(): void
     {
-        $uri = (new Uri($this->uri))->withPath('/otherpath');
+        $uri = (new Uri(self::$uri))->withPath('/otherpath');
 
         $this->assertEquals('/otherpath', $uri->getPath());
         $this->assertEquals('http://username:password@hostname.com:9090/otherpath?arg=value#anchor', (string) $uri);
@@ -312,32 +358,38 @@ class UriTest extends TestCase
      *
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
+     *
+     * @return void
      */
     public function testWithPathWithWrongPathType($path): void
     {
-        (new Uri($this->uri))->withPath($path);
+        (new Uri(self::$uri))->withPath($path);
     }
 
     /**
      * Test with path passing query string.
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Linna\Http\Message\Uri: Invalid path provided; must not contain a query string
+     * @expectedExceptionMessage Invalid path provided; must not contain a query string
+     *
+     * @return void
      */
     public function testWithPathPassingQueryString(): void
     {
-        (new Uri($this->uri))->withPath('/otherPath?arg=value');
+        (new Uri(self::$uri))->withPath('/otherPath?arg=value');
     }
 
     /**
      * Test with path passing fragment.
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Linna\Http\Message\Uri: Invalid path provided; must not contain a URI fragment
+     * @expectedExceptionMessage Invalid path provided; must not contain a URI fragment
+     *
+     * @return void
      */
     public function testWithPathPassingFragment(): void
     {
-        (new Uri($this->uri))->withPath('/otherPath#anchor');
+        (new Uri(self::$uri))->withPath('/otherPath#anchor');
     }
 
     /**
@@ -367,6 +419,8 @@ class UriTest extends TestCase
      * Test uri __toString.
      *
      * @dataProvider uriProvider
+     *
+     * @return void
      */
     public function testUriToString(string $testUri): void
     {
@@ -395,10 +449,12 @@ class UriTest extends TestCase
      * @param string $expectedUri
      *
      * @dataProvider queryProvider
+     *
+     * @return void
      */
     public function testWithQuery(string $withQuery, string $expectedQuery, string $expectedUri): void
     {
-        $uri = (new Uri($this->uri))->withQuery($withQuery);
+        $uri = (new Uri(self::$uri))->withQuery($withQuery);
 
         $this->assertEquals($expectedQuery, $uri->getQuery());
         $this->assertEquals($expectedUri, (string) $uri);
@@ -409,20 +465,24 @@ class UriTest extends TestCase
      *
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
+     *
+     * @return void
      */
     public function testWithQueryWithWrongQueryType($query): void
     {
-        (new Uri($this->uri))->withQuery($query);
+        (new Uri(self::$uri))->withQuery($query);
     }
 
     /**
      * Test with query passing.
      *
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testWithQueryPassingFragment(): void
     {
-        (new Uri($this->uri))->withQuery('arg=foo#anchor2');
+        (new Uri(self::$uri))->withQuery('arg=foo#anchor2');
     }
 
     /**
@@ -447,10 +507,12 @@ class UriTest extends TestCase
      * @param string $expectedUri
      *
      * @dataProvider fragmentProvider
+     *
+     * @return void
      */
     public function testWithFragment(string $withFragment, string $expectedFragment, string $expectedUri): void
     {
-        $uri = (new Uri($this->uri))->withFragment($withFragment);
+        $uri = (new Uri(self::$uri))->withFragment($withFragment);
 
         $this->assertEquals($expectedFragment, $uri->getFragment());
         $this->assertEquals($expectedUri, (string) $uri);
@@ -461,9 +523,11 @@ class UriTest extends TestCase
      *
      * @dataProvider wrongArgumentProvider
      * @expectedException TypeError
+     *
+     * @return void
      */
     public function testWithFragmentWithWrongFragmentType($fragment): void
     {
-        (new Uri($this->uri))->withFragment($fragment);
+        (new Uri(self::$uri))->withFragment($fragment);
     }
 }

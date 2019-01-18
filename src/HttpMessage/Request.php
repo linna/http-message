@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -13,13 +13,32 @@ namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * HTTP Psr7 Request implementation.
+ * PSR-7 Request implementation.
  */
 class Request extends Message implements RequestInterface
 {
+    protected $method = 'GET';
+
+    protected $target = '';
+
+    protected $uri = '';
+
+
+    public function __construct(UriInterface $uri, string $method = 'GET', StreamInterface $body, array $headers = [])
+    {
+
+        //force __toString method
+        $this->uri = (string) $uri;
+        $this->method = $method;
+
+        parent::$body = $body;
+        parent::$headers = $headers;
+    }
+
     /**
      * Retrieves the message's request target.
      *

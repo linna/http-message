@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -16,6 +16,9 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
+/**
+ * PSR-7 Uploaded file implementation.
+ */
 class UploadedFile implements UploadedFileInterface
 {
     /**

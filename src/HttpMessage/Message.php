@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -17,7 +17,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * HTTP Psr7 Message implementation.
+ * PSR-7 Message implementation.
  */
 abstract class Message implements MessageInterface
 {
@@ -29,11 +29,7 @@ abstract class Message implements MessageInterface
     /**
      * @var array Allowed protocol versions.
      */
-    protected static $allowedProtocolVersions = [
-        '1.0' => true,
-        '1.1' => true,
-        '2.0' => true,
-    ];
+    protected static $allowedProtocolVersions = ['1.0', '1.1', '2.0'];
 
     /**
      * @var array Message headers .
@@ -73,14 +69,14 @@ abstract class Message implements MessageInterface
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
-        if (!isset(self::$validProtocolVersions[$version])) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid HTTP protocol version. Must be 1.0, 1.1 or 2.0');
+        if (in_array($version, ['1.0', '1.1', '2.0'])) {
+            $new = clone $this;
+            $new->protocolVersion = $version;
+
+            return $new;
         }
 
-        $new = clone $this;
-        $new->protocolVersion = $version;
-
-        return $new;
+        throw new InvalidArgumentException('Invalid HTTP protocol version. Must be 1.0, 1.1 or 2.0');
     }
 
     /**

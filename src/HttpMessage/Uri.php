@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -15,7 +15,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Psr7 Uri Implementation.
+ * PSR-7 Uri Implementation.
  */
 class Uri implements UriInterface
 {
@@ -30,18 +30,44 @@ class Uri implements UriInterface
     ];
 
     /**
-     * @var array Url description.
+     * @var string Url scheme.
      */
-    protected $url = [
-        'scheme'   => '',
-        'host'     => '',
-        'port'     => 0,
-        'user'     => '',
-        'pass'     => '',
-        'path'     => '',
-        'query'    => '',
-        'fragment' => '',
-    ];
+    protected $scheme = '';
+
+    /**
+     * @var string Url host.
+     */
+    protected $host = '';
+
+    /**
+     * @var int Url port.
+     */
+    protected $port =  0;
+
+    /**
+     * @var string Url authority user
+     */
+    protected $user = '';
+
+    /**
+     * @var string Url authority password
+     */
+    protected $pass = '';
+
+    /**
+     * @var string Url path
+     */
+    protected $path = '';
+
+    /**
+     * @var string Url query
+     */
+    protected $query = '';
+
+    /**
+     * @var string Url fragment
+     */
+    protected $fragment = '';
 
     /**
      * Constructor.
@@ -53,10 +79,28 @@ class Uri implements UriInterface
     public function __construct(string $uri)
     {
         if (($parsedUrl = parse_url($uri)) === false) {
-            throw new InvalidArgumentException(__CLASS__.': Bad URI provided for '.__METHOD__);
+            throw new InvalidArgumentException('Bad URI provided.');
         }
 
-        $this->url = array_merge($this->url, $parsedUrl);
+        [
+            'scheme'   => $this->scheme,
+            'host'     => $this->host,
+            'port'     => $this->port,
+            'user'     => $this->user,
+            'pass'     => $this->pass,
+            'path'     => $this->path,
+            'query'    => $this->query,
+            'fragment' => $this->fragment,
+        ] = array_replace_recursive([
+            'scheme'   => '',
+            'host'     => '',
+            'port'     => 0,
+            'user'     => '',
+            'pass'     => '',
+            'path'     => '',
+            'query'    => '',
+            'fragment' => '',
+        ], $parsedUrl);
     }
 
     /**
@@ -76,7 +120,7 @@ class Uri implements UriInterface
      */
     public function getScheme(): string
     {
-        return strtolower($this->url['scheme']);
+        return strtolower($this->scheme);
     }
 
     /**
@@ -100,18 +144,18 @@ class Uri implements UriInterface
      */
     public function getAuthority(): string
     {
-        if ($this->url['host'] === '') {
+        if ($this->host === '') {
             return '';
         }
 
-        $authority = $this->url['host'];
+        $authority = $this->host;
 
-        if ($this->url['user'] !== '') {
+        if ($this->user !== '') {
             $authority = $this->getUserInfo().'@'.$authority;
         }
 
-        if ($this->url['port'] !== 0) {
-            $authority .= ':'.$this->url['port'];
+        if ($this->port !== 0) {
+            $authority .= ':'.$this->port;
         }
 
         return $authority;
@@ -134,10 +178,10 @@ class Uri implements UriInterface
      */
     public function getUserInfo(): string
     {
-        $user = $this->url['user'];
+        $user = $this->user;
 
-        if ($this->url['pass'] !== '' && $this->url['pass'] !== null) {
-            $user .= ':'.$this->url['pass'];
+        if ($this->pass !== '' && $this->pass !== null) {
+            $user .= ':'.$this->pass;
         }
 
         return ($user !== '') ? $user : '';
@@ -157,7 +201,7 @@ class Uri implements UriInterface
      */
     public function getHost(): string
     {
-        return strtolower($this->url['host']);
+        return strtolower($this->host);
     }
 
     /**
@@ -177,8 +221,8 @@ class Uri implements UriInterface
      */
     public function getPort(): int
     {
-        $scheme = $this->url['scheme'];
-        $port = $this->url['port'];
+        $scheme = $this->scheme;
+        $port = $this->port;
 
         $standardPort = $this->checkStandardPortForCurretScheme($scheme, $port, $this->standardSchemes);
         $standardScheme = array_key_exists($scheme, $this->standardSchemes);
@@ -222,7 +266,7 @@ class Uri implements UriInterface
      */
     public function getPath(): string
     {
-        return $this->url['path'];
+        return $this->path;
     }
 
     /**
@@ -248,7 +292,7 @@ class Uri implements UriInterface
      */
     public function getQuery(): string
     {
-        return $this->url['query'];
+        return $this->query;
     }
 
     /**
@@ -270,7 +314,7 @@ class Uri implements UriInterface
      */
     public function getFragment(): string
     {
-        return $this->url['fragment'];
+        return $this->fragment;
     }
 
     /**
@@ -292,14 +336,14 @@ class Uri implements UriInterface
      */
     public function withScheme(string $scheme): UriInterface
     {
-        if (!array_key_exists($scheme, $this->standardSchemes)) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid or unsupported scheme provided for '.__METHOD__);
+        if (array_key_exists($scheme, $this->standardSchemes)) {
+            $new = clone $this;
+            $new->scheme = $scheme;
+
+            return $new;
         }
 
-        $new = clone $this;
-        $new->url['scheme'] = $scheme;
-
-        return $new;
+        throw new InvalidArgumentException('Invalid or unsupported scheme provided.');
     }
 
     /**
@@ -320,8 +364,8 @@ class Uri implements UriInterface
     public function withUserInfo(string $user, string $password = ''): UriInterface
     {
         $new = clone $this;
-        $new->url['user'] = $user;
-        $new->url['pass'] = $password;
+        $new->user = $user;
+        $new->pass = $password;
 
         return $new;
     }
@@ -343,11 +387,11 @@ class Uri implements UriInterface
     public function withHost(string $host): UriInterface
     {
         if (filter_var($host, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME) === false) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid host provided for '.__METHOD__);
+            throw new InvalidArgumentException('Invalid host provided.');
         }
 
         $new = clone $this;
-        $new->url['host'] = $host;
+        $new->host = $host;
 
         return $new;
     }
@@ -373,14 +417,14 @@ class Uri implements UriInterface
      */
     public function withPort(int $port = 0): UriInterface
     {
-        if ($port !== 0 && ($port < 1 || $port > 65535)) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid port ('.$port.') number provided for '.__METHOD__);
+        if ($port > -1 && $port < 65536) {
+            $new = clone $this;
+            $new->port = $port;
+
+            return $new;
         }
 
-        $new = clone $this;
-        $new->url['port'] = $port;
-
-        return $new;
+        throw new InvalidArgumentException("Invalid port {$port} number provided.");
     }
 
     /**
@@ -410,15 +454,15 @@ class Uri implements UriInterface
     public function withPath(string $path): UriInterface
     {
         if (strpos($path, '?') !== false) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid path provided; must not contain a query string');
+            throw new InvalidArgumentException('Invalid path provided; must not contain a query string.');
         }
 
         if (strpos($path, '#') !== false) {
-            throw new InvalidArgumentException(__CLASS__.': Invalid path provided; must not contain a URI fragment');
+            throw new InvalidArgumentException('Invalid path provided; must not contain a URI fragment.');
         }
 
         $new = clone $this;
-        $new->url['path'] = $path;
+        $new->path = $path;
 
         return $new;
     }
@@ -442,14 +486,16 @@ class Uri implements UriInterface
      */
     public function withQuery(string $query): UriInterface
     {
-        if (strpos($query, '#') !== false) {
-            throw new InvalidArgumentException(__CLASS__.': Query string must not include a URI fragment');
+        if (strpos($query, '#') === false) {
+            $new = clone $this;
+            $new->query = (strpos($query, '?') !== false) ? substr($query, 1) : $query;
+
+            return $new;
         }
 
-        $new = clone $this;
-        $new->url['query'] = (strpos($query, '?') !== false) ? substr($query, 1) : $query;
 
-        return $new;
+
+        throw new InvalidArgumentException('Query string must not include a URI fragment.');
     }
 
     /**
@@ -470,7 +516,7 @@ class Uri implements UriInterface
     public function withFragment(string $fragment): UriInterface
     {
         $new = clone $this;
-        $new->url['fragment'] = (strpos($fragment, '#') !== false) ? substr($fragment, 1) : $fragment;
+        $new->fragment = (strpos($fragment, '#') !== false) ? substr($fragment, 1) : $fragment;
 
         return $new;
     }
@@ -501,9 +547,9 @@ class Uri implements UriInterface
      */
     public function __toString(): string
     {
-        $scheme = $this->url['scheme'];
-        $query = $this->url['query'];
-        $fragment = $this->url['fragment'];
+        $scheme = $this->scheme;
+        $query = $this->query;
+        $fragment = $this->fragment;
 
         return $this->createUriString(
             ($scheme !== '') ? $scheme.'://' : '',

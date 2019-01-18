@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Linna Psr7.
+ * Linna Http Message.
  *
  * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
- * @copyright (c) 2018, Sebastian Rapetti
+ * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
 declare(strict_types=1);
@@ -15,7 +15,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * HTTP Psr7 Response implementation.
+ * PSR-7 Response implementation.
  */
 class Response extends Message implements ResponseInterface
 {
