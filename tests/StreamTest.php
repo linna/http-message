@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
  */
 class StreamTest extends TestCase
 {
-
     /**
      * Tear down after class.
      *

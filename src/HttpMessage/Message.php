@@ -27,11 +27,6 @@ abstract class Message implements MessageInterface
     protected $protocolVersion = '1.1';
 
     /**
-     * @var array Allowed protocol versions.
-     */
-    protected static $allowedProtocolVersions = ['1.0', '1.1', '2.0'];
-
-    /**
      * @var array Message headers .
      */
     protected $headers = [];
@@ -65,18 +60,20 @@ abstract class Message implements MessageInterface
      *
      * @param string $version HTTP protocol version
      *
-     * @return static
+     * @return MessageInterface
+     *
+     * @throws InvalidArgumentException if provided protocol version is invalid.
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
-        if (in_array($version, ['1.0', '1.1', '2.0'])) {
+        if (in_array($version, ['1.0', '1.1', '2'], true)) {
             $new = clone $this;
             $new->protocolVersion = $version;
 
             return $new;
         }
 
-        throw new InvalidArgumentException('Invalid HTTP protocol version. Must be 1.0, 1.1 or 2.0');
+        throw new InvalidArgumentException('Invalid HTTP protocol version. Must be 1.0, 1.1 or 2');
     }
 
     /**
@@ -304,8 +301,10 @@ abstract class Message implements MessageInterface
      * Normalize header name for case-unsensitive search.
      *
      * @param string $headerName
+     *
+     * @return void
      */
-    private function normalize(string &$headerName)
+    private function normalize(string &$headerName): void
     {
         $headerName = ucwords(strtolower($headerName), '-');
     }

@@ -25,7 +25,7 @@ This package provide a implementations for [PSR-7 HTTP message interfaces](https
 standard psr http message, classes in package use a [strict typed fork](https://github.com/s3b4stian/http-message).
 
 # Status of the work
-Uri and Stream classes works, working on others :)
+Message, Stream and Uri classes works, working on others :)
 
 # Requirements
 This package require php 7.1

@@ -13,7 +13,6 @@ namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -21,22 +20,66 @@ use Psr\Http\Message\UriInterface;
  */
 class Request extends Message implements RequestInterface
 {
-    protected $method = 'GET';
+    /**
+     * @var string Request HTTP method (GET, POST, PUT.....).
+     */
+    protected $method = '';
 
+    /**
+     * @var string Request target.
+     */
     protected $target = '';
 
-    protected $uri = '';
+    /**
+     * @var UriInterface Request uri.
+     */
+    protected $uri;
 
-
-    public function __construct(UriInterface $uri, string $method = 'GET', StreamInterface $body, array $headers = [])
+    /**
+     * Class Constructor.
+     *
+     * @param UriInterface $uri
+     * @param string       $method
+     * @param string       $body
+     * @param array        $headers
+     */
+    public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [])
     {
-
         //force __toString method
-        $this->uri = (string) $uri;
-        $this->method = $method;
+        $this->uri = $uri;
 
-        parent::$body = $body;
+        //check for valide method
+        $this->method = $this->validateHttpMethod(strtoupper($method));
+
+        parent::$body = new Stream($body, 'wb+');
         parent::$headers = $headers;
+    }
+
+    /**
+     * Validate HTTP Method
+     *
+     * @param string $method HTTP Method
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException if passed method is not an HTTP valid method.
+     */
+    private function validateHttpMethod(string $method): string
+    {
+        if (in_array($method, [
+            'GET',
+            'HEAD',
+            'POST',
+            'PUT',
+            'DELETE',
+            'CONNECT',
+            'OPTIONS',
+            'TRACE'
+            ])) {
+            return $method;
+        }
+
+        throw new InvalidArgumentException('Invalid HTTP method.');
     }
 
     /**
@@ -57,6 +100,21 @@ class Request extends Message implements RequestInterface
      */
     public function getRequestTarget(): string
     {
+        if (!empty($this->target)) {
+            return $this->target;
+        }
+
+        $target = $this->uri->getPath();
+
+        if ($this->uri->getQuery()) {
+            $target .= '?' . $this->uri->getQuery();
+        }
+
+        if (empty($target)) {
+            return '/';
+        }
+
+        return $target;
     }
 
     /**
@@ -80,6 +138,10 @@ class Request extends Message implements RequestInterface
      */
     public function withRequestTarget(string $requestTarget): RequestInterface
     {
+        $new = clone $this;
+        $new->target = $requestTarget;
+
+        return $new;
     }
 
     /**
@@ -89,6 +151,7 @@ class Request extends Message implements RequestInterface
      */
     public function getMethod(): string
     {
+        return $this->method;
     }
 
     /**
@@ -110,6 +173,10 @@ class Request extends Message implements RequestInterface
      */
     public function withMethod(string $method): RequestInterface
     {
+        $new = clone $this;
+        $new->method = $this->validateHttpMethod(strtoupper($method));
+
+        return $new;
     }
 
     /**
@@ -124,6 +191,7 @@ class Request extends Message implements RequestInterface
      */
     public function getUri(): UriInterface
     {
+        return $this->uri;
     }
 
     /**
