@@ -15,7 +15,7 @@
         "issues": "https://github.com/linna/http-message/issues"
     },
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "s3b4stian/http-message": "dev-master",
         "linna/typed-array" :  "^2.0"
     },

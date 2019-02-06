@@ -16,7 +16,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/http-message/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/linna/http-message/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![StyleCI](https://github.styleci.io/repos/96924222/shield?branch=master&style=flat)](https://github.styleci.io/repos/96924222)
-[![PHP 7.1](https://img.shields.io/badge/PHP-7.1-8892BF.svg)](http://php.net)
+[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-8892BF.svg)](http://php.net)
 
 </div>
 
@@ -28,7 +28,7 @@ standard psr http message, classes in package use a [strict typed fork](https://
 Message, Stream and Uri classes works, working on others :)
 
 # Requirements
-This package require php 7.1
+This package require php 7.2
 
 # Installation
 With composer:
