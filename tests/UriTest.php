@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Linna\Tests;
 
+use InvalidArgumentException;
 use Linna\Http\Message\Uri;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * Uri Test
@@ -47,12 +49,13 @@ class UriTest extends TestCase
     /**
      * Test new instance with worng uri.
      *
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testNewInstanceWithWrongUri(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Bad URI provided.");
+
         (new Uri('http:///example.com'));
     }
 
@@ -79,12 +82,13 @@ class UriTest extends TestCase
      * Test new instance with wrong argument type.
      *
      * @dataProvider wrongArgumentProvider
-     * @expectedException TypeError
      *
      * @return void
      */
     public function testNewInstanceWithWrongArgumentType($argument): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri($argument));
     }
 
@@ -160,19 +164,17 @@ class UriTest extends TestCase
     /**
      * Test with scheme with unsupported scheme.
      *
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testWithSchemeWithUnsupportedScheme(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         (new Uri(self::$uri))->withScheme('httpss');
     }
 
     /**
      * Test with scheme with wrong scheme type.
-     *
-     * @expectedException TypeError
      *
      * @dataProvider wrongArgumentProvider
      *
@@ -180,6 +182,8 @@ class UriTest extends TestCase
      */
     public function testWithSchemeWithWrongSchemeType($argument): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withScheme($argument);
     }
 
@@ -234,25 +238,26 @@ class UriTest extends TestCase
     /**
      * Test with host with invalid host format.
      *
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testWithHostWithInvalidHostFormat(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         (new Uri(self::$uri))->withHost('host?name');
     }
 
     /**
      * Test with host with wrong host type.
      *
-     * @expectedException TypeError
      * @dataProvider wrongArgumentProvider
      *
      * @return void
      */
     public function testWithHostWithWrongHostType($argument): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withHost($argument);
     }
 
@@ -297,12 +302,13 @@ class UriTest extends TestCase
      * Test with port with out of range port.
      *
      * @dataProvider outOfRangePortProvider
-     * @expectedException InvalidArgumentException
      *
      * @return void
      */
     public function testWithPortWithOutOfRangePort(int $port): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         (new Uri(self::$uri))->withPort($port);
     }
 
@@ -331,12 +337,13 @@ class UriTest extends TestCase
      * @param mixed $port
      *
      * @dataProvider wrongPortTypeProvider
-     * @expectedException TypeError
      *
      * @return void
      */
     public function testWithPortWithWrongPortType($port): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withPort($port);
     }
 
@@ -357,38 +364,39 @@ class UriTest extends TestCase
      * Test with path with wrong path type.
      *
      * @dataProvider wrongArgumentProvider
-     * @expectedException TypeError
      *
      * @return void
      */
     public function testWithPathWithWrongPathType($path): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withPath($path);
     }
 
     /**
      * Test with path passing query string.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid path provided; must not contain a query string
-     *
      * @return void
      */
     public function testWithPathPassingQueryString(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid path provided; must not contain a query string");
+
         (new Uri(self::$uri))->withPath('/otherPath?arg=value');
     }
 
     /**
      * Test with path passing fragment.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid path provided; must not contain a URI fragment
-     *
      * @return void
      */
     public function testWithPathPassingFragment(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid path provided; must not contain a URI fragment");
+
         (new Uri(self::$uri))->withPath('/otherPath#anchor');
     }
 
@@ -464,24 +472,25 @@ class UriTest extends TestCase
      * Test with query with wrong query type.
      *
      * @dataProvider wrongArgumentProvider
-     * @expectedException TypeError
      *
      * @return void
      */
     public function testWithQueryWithWrongQueryType($query): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withQuery($query);
     }
 
     /**
      * Test with query passing.
      *
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testWithQueryPassingFragment(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         (new Uri(self::$uri))->withQuery('arg=foo#anchor2');
     }
 
@@ -522,12 +531,13 @@ class UriTest extends TestCase
      * Test with fragment with wrong query type.
      *
      * @dataProvider wrongArgumentProvider
-     * @expectedException TypeError
      *
      * @return void
      */
     public function testWithFragmentWithWrongFragmentType($fragment): void
     {
+        $this->expectException(TypeError::class);
+
         (new Uri(self::$uri))->withFragment($fragment);
     }
 }

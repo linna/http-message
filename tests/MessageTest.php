@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Linna\Tests;
 
+use InvalidArgumentException;
 use Linna\Http\Message\Message;
 use Linna\Http\Message\Stream;
 use PHPUnit\Framework\TestCase;
@@ -71,13 +72,13 @@ class MessageTest extends TestCase
     /**
      * Test with protocol version with invalid protocol.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid HTTP protocol version. Must be 1.0, 1.1 or 2
-     *
      * @return void
      */
     public function testWithProtocolVersionWithInvalidProtocol(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid HTTP protocol version. Must be 1.0, 1.1 or 2");
+
         $message = self::$message->withProtocolVersion('1');
     }
 

@@ -20,9 +20,9 @@
         "linna/typed-array" :  "^2.0"
     },
     "require-dev": {
-        "infection/infection": "^0.11",
+        "infection/infection": "^0.12",
         "phpstan/phpstan": "^0.11",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^8.0"
     },
     "provide": {
         "psr/http-message-implementation": "1.0"

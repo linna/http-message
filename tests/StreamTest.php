@@ -14,6 +14,7 @@ namespace Linna\Tests;
 use InvalidArgumentException;
 use Linna\Http\Message\Stream;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Stream Test.
@@ -55,39 +56,39 @@ class StreamTest extends TestCase
     /**
      * Test new instance with invalid stream identifier.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid stream identifier provided.
-     *
      * @return void
      */
     public function testNewInstanceWithInvalidStreamIdentifier(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid stream identifier provided.");
+
         (new Stream('php://memor', 'wb+'));
     }
 
     /**
      * Test new instance with invalid stream resource.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid resource provided.
-     *
      * @return void
      */
     public function testNewInstanceWithInvalidStreamResource(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid resource provided.");
+
         (new Stream([], 'wb+'));
     }
 
     /**
      * Test new instance with not stream resource.
      *
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Resource provided is not a stream.
-     *
      * @return void
      */
     public function testNewInstanceWithNotSreamResource(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Resource provided is not a stream.");
+
         (new Stream(socket_create(AF_UNIX, SOCK_STREAM, 0)));
     }
 
@@ -217,13 +218,13 @@ class StreamTest extends TestCase
     /**
      * Test tell with no resource.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Resource not available.
-     *
      * @return void
      */
     public function testTellWithNoResource(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Resource not available.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'rw+'));
@@ -324,13 +325,13 @@ class StreamTest extends TestCase
     /**
      * Test rewind with not seekable stream.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Can not rewind the stream.
-     *
      * @return void
      */
     public function testRewindWithNotSeekableStream(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Can not rewind the stream.");
+
         $stream = new Stream('php://output', 'w');
         $stream->rewind();
     }
@@ -427,13 +428,13 @@ class StreamTest extends TestCase
     /**
      * Test write with no resource.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Resource not available.
-     *
      * @return void
      */
     public function testWriteWithNoResource(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Resource not available.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'rw+'));
@@ -445,13 +446,13 @@ class StreamTest extends TestCase
     /**
      * Test write with not writable stream.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Stream is not writable.
-     *
      * @return void
      */
     public function testWriteWithNotWritableStream(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Stream is not writable.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'r'));
@@ -535,13 +536,13 @@ class StreamTest extends TestCase
     /**
      * Test read with no resource.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Resource not available.
-     *
      * @return void
      */
     public function testReadWithNoResource(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Resource not available.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'rw+'));
@@ -554,13 +555,13 @@ class StreamTest extends TestCase
     /**
      * Test write with not readable stream.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Stream is not readable.
-     *
      * @return void
      */
     public function testReadWithNotReadableStream(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Stream is not readable.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'w'));
@@ -589,13 +590,13 @@ class StreamTest extends TestCase
     /**
      * Test get contents with not readable stream.
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Stream is not readable.
-     *
      * @return void
      */
     public function testGetContentsWithNotReadableStream(): void
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("Stream is not readable.");
+
         $file = tempnam(sys_get_temp_dir(), 'stream_test_');
 
         $stream = new Stream(fopen($file, 'w'));
