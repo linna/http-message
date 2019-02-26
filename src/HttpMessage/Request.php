@@ -45,14 +45,13 @@ class Request extends Message implements RequestInterface
      */
     public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [])
     {
-        //force __toString method
         $this->uri = $uri;
 
-        //check for valide method
         $this->method = $this->validateHttpMethod(strtoupper($method));
 
-        parent::$body = new Stream($body, 'wb+');
-        parent::$headers = $headers;
+        //from parent Message
+        $this->body = new Stream($body, 'wb+');
+        $this->headers = $headers;
     }
 
     /**
@@ -105,9 +104,10 @@ class Request extends Message implements RequestInterface
         }
 
         $target = $this->uri->getPath();
+        $query = $this->uri->getQuery();
 
-        if ($this->uri->getQuery()) {
-            $target .= '?' . $this->uri->getQuery();
+        if (!empty($query)) {
+            $target .= "?{$query}";
         }
 
         if (empty($target)) {
