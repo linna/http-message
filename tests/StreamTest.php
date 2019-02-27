@@ -104,7 +104,7 @@ class StreamTest extends TestCase
 
         (new Stream($resource))->close();
 
-        $this->assertFalse(is_resource($resource));
+        $this->assertIsResource($resource);
     }
 
     /**
@@ -138,7 +138,7 @@ class StreamTest extends TestCase
 
         $stream = new Stream(fopen($file, 'r'));
 
-        $this->assertTrue(is_resource($stream->detach()));
+        $this->assertIsResource($stream->detach());
     }
 
     /**
@@ -152,7 +152,7 @@ class StreamTest extends TestCase
 
         $stream = new Stream(fopen($file, 'r'));
 
-        $this->assertTrue(is_resource($stream->detach()));
+        $this->assertIsResource($stream->detach());
         $this->assertNull($stream->detach());
     }
 
@@ -673,9 +673,9 @@ class StreamTest extends TestCase
 
         $metadata = $stream->getMetadata($key);
 
-        $this->assertTrue(is_array($metadata));
-        $this->assertEquals(1, count($metadata));
-        $this->assertTrue(array_key_exists($key, $metadata));
+        $this->assertIsArray($metadata);
+        $this->assertCount(1, $metadata);
+        $this->assertArrayHasKey($key, $metadata);
     }
 
     /**
@@ -693,7 +693,7 @@ class StreamTest extends TestCase
 
         $metadata = $stream->getMetadata('unknown');
 
-        $this->assertTrue(is_array($metadata));
-        $this->assertEquals(0, count($metadata));
+        $this->assertIsArray($metadata);
+        $this->assertCount(0, $metadata);
     }
 }
