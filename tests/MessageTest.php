@@ -189,10 +189,11 @@ class MessageTest extends TestCase
         $message = self::$message
             ->withHeader('X-Foo', ['Foo'])
             ->withAddedHeader('x-foo', ['Bar'])
-            ->withAddedHeader('X-Foo', ['Baz']);
+            ->withAddedHeader('X-Foo', ['Baz'])
+            ->withAddedHeader('X-fooo', ['Baz']);
 
         $this->assertSame([], self::$message->getHeaders());
-        $this->assertSame(['X-Foo' => ['Foo', 'Bar', 'Baz']], $message->getHeaders());
+        $this->assertSame(['X-Foo' => ['Foo', 'Bar', 'Baz'], 'X-Fooo' => ['Baz']], $message->getHeaders());
     }
 
     /**
