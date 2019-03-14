@@ -553,10 +553,10 @@ class Uri implements UriInterface
 
         return $this->createUriString(
             ($scheme !== '') ? $scheme.'://' : '',
-               $this->getAuthority(),
-               $this->getPath(),
-               ($query !== '') ? '?'.$query : '',
-               ($fragment !== '') ? '#'.$fragment : ''
+            $this->getAuthority(),
+            $this->getPath(),
+            ($query !== '') ? '?'.$query : '',
+            ($fragment !== '') ? '#'.$fragment : ''
         );
     }
 }

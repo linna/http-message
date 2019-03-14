@@ -145,4 +145,121 @@ class RequestTest extends TestCase
 
         $this->assertSame('/foo/bar/baz/', $request->getRequestTarget());
     }
+
+    /**
+     * Test with uri with preserve host.
+     * - If the Host header is missing or empty, and the new URI contains
+     *   a host component, this method MUST update the Host header in the returned
+     *   request.
+     *
+     * @return void
+     */
+    public function testWithUriWithPreserveHostCaseOne(): void
+    {
+        $request = self::$request
+            ->withUri(new Uri('http://www.otherhost.com/foo/bar/baz/'), true);
+
+        $this->assertSame('http://www.otherhost.com/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.otherhost.com']], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri with preserve host.
+     * - If the Host header is missing or empty, and the new URI does not contain a
+     *   host component, this method MUST NOT update the Host header in the returned
+     *   request.
+     *
+     * @return void
+     */
+    public function testWithUriWithPreserveHostCaseTwo(): void
+    {
+        $request = self::$request
+            ->withUri(new Uri('/foo/bar/baz/'), true);
+
+        $this->assertSame('/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame([], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri with preserve host.
+     * - If a Host header is present and non-empty, this method MUST NOT update
+     *   the Host header in the returned request.
+     *
+     * @return void
+     */
+    public function testWithUriWithPreserveHostCaseThree(): void
+    {
+        $request = self::$request
+            ->withHeader('host', ['www.foohost.com'])
+            ->withUri(new Uri('http://www.otherhost.com/foo/bar/baz/'), true);
+
+        $this->assertSame('http://www.otherhost.com/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.foohost.com']], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri no preserve host.
+     * - If a Host header is not present, and the new URI contain a host
+     *   component this method update the Host header in the returned request.
+     *
+     * @return void
+     */
+    public function testWithUriNoPreserveHostCaseOne(): void
+    {
+        $request = self::$request
+            ->withUri(new Uri('http://www.otherhost.com/foo/bar/baz/'));
+
+        $this->assertSame('http://www.otherhost.com/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.otherhost.com']], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri no preserve host.
+     * - If a Host header is present, and the new URI contain a host
+     *   component this method update the Host header in the returned request.
+     *
+     * @return void
+     */
+    public function testWithUriNoPreserveHostCaseTwo(): void
+    {
+        $request = self::$request
+            ->withHeader('host', ['www.foohost.com'])
+            ->withUri(new Uri('http://www.otherhost.com/foo/bar/baz/'));
+
+        $this->assertSame('http://www.otherhost.com/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.otherhost.com']], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri no preserve host.
+     * - If a Host header is present, and the new URI does not contain a host
+     *   component this method doesn't update the Host header in the returned
+     *   request.
+     *
+     * @return void
+     */
+    public function testWithUriNoPreserveHostCaseThree(): void
+    {
+        $request = self::$request
+            ->withHeader('host', ['www.foohost.com'])
+            ->withUri(new Uri('/foo/bar/baz/'));
+
+        $this->assertSame('/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.foohost.com']], $request->getHeaders());
+    }
+
+    /**
+     * Test with uri no preserve host with non standard port.
+     *
+     * @return void
+     */
+    public function testWithUriNoPreserveHostWithNonStandardPort(): void
+    {
+        $request = self::$request
+            ->withHeader('host', ['www.foohost.com'])
+            ->withUri(new Uri('http://www.otherhost.com:8080/foo/bar/baz/'));
+
+        $this->assertSame('http://www.otherhost.com:8080/foo/bar/baz/', (string) $request->getUri());
+        $this->assertSame(['Host' => [0 => 'www.otherhost.com:8080']], $request->getHeaders());
+    }
 }

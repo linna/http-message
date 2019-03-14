@@ -228,5 +228,28 @@ class Request extends Message implements RequestInterface
      */
     public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
+        $new = clone $this;
+        $new->uri = $uri;
+
+        if ($preserveHost && $this->hasHeader('Host')) {
+            return $new;
+        }
+
+        if (empty($uri->getHost())) {
+            return $new;
+        }
+
+        $host = $uri->getHost();
+        $port = $uri->getPort();
+
+        //exclude standard ports from host
+        if (!in_array($port, [80, 443])) {
+            $host .= ':' . $uri->getPort();
+        }
+
+        $new = $new->withoutHeader('host');
+        $new->headers['Host'] = [$host];
+
+        return $new;
     }
 }

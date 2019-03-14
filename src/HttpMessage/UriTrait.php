@@ -30,11 +30,11 @@ trait UriTrait
      * @return string
      */
     private function createUriString(
-            string $scheme,
-            string $authority,
-            string $path,
-            string $query,
-            string $fragment
+        string $scheme,
+        string $authority,
+        string $path,
+        string $query,
+        string $fragment
             ): string {
         $uri = $scheme.$authority;
 
@@ -54,10 +54,10 @@ trait UriTrait
      * @return int
      */
     private function getNonStandardPort(
-            int $port,
-            string $scheme,
-            bool $standardScheme,
-            array $supportedSchemes
+        int $port,
+        string $scheme,
+        bool $standardScheme,
+        array $supportedSchemes
             ): int {
         return (!$port && $standardScheme) ? $supportedSchemes[$scheme] : $port;
     }
