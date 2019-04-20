@@ -66,7 +66,7 @@ abstract class Message implements MessageInterface
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
-        if (in_array($version, ['1.0', '1.1', '2'], true)) {
+        if (\in_array($version, ['1.0', '1.1', '2'], true)) {
             $new = clone $this;
             $new->protocolVersion = $version;
 
@@ -168,7 +168,7 @@ abstract class Message implements MessageInterface
     {
         $this->normalize($name);
 
-        return isset($this->headers[$name]) ? implode(', ', $this->headers[$name]) : '';
+        return isset($this->headers[$name]) ? \implode(', ', $this->headers[$name]) : '';
     }
 
     /**
@@ -236,7 +236,7 @@ abstract class Message implements MessageInterface
 
         //at this point header exists
         //remain only to append new value to existing header
-        $new->headers[$name] = array_merge($this->headers[$name], $headerValue);
+        $new->headers[$name] = \array_merge($this->headers[$name], $headerValue);
 
         return $new;
     }
@@ -306,6 +306,6 @@ abstract class Message implements MessageInterface
      */
     private function normalize(string &$headerName): void
     {
-        $headerName = ucwords(strtolower($headerName), '-');
+        $headerName = \ucwords(\strtolower($headerName), '-');
     }
 }

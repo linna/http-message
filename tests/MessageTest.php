@@ -232,7 +232,7 @@ class MessageTest extends TestCase
      */
     public function testWithBody(): void
     {
-        $stream = new Stream(fopen('php://memory', 'rwb+'));
+        $stream = new Stream(\fopen('php://memory', 'rwb+'));
         $stream->write('parameter1=value1&parameter2=value2');
         $stream->rewind();
 

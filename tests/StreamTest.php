@@ -28,8 +28,8 @@ class StreamTest extends TestCase
      */
     public static function tearDownAfterClass(): void
     {
-        foreach (glob(sys_get_temp_dir().'/stream_test*') as $file) {
-            unlink($file);
+        foreach (\glob(\sys_get_temp_dir().'/stream_test*') as $file) {
+            \unlink($file);
         }
     }
 
@@ -50,7 +50,7 @@ class StreamTest extends TestCase
      */
     public function testNewInstanceWithStreamResource(): void
     {
-        $this->assertInstanceOf(Stream::class, new Stream(fopen('php://memory', 'wb+')));
+        $this->assertInstanceOf(Stream::class, new Stream(\fopen('php://memory', 'wb+')));
     }
 
     /**
@@ -89,7 +89,7 @@ class StreamTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Resource provided is not a stream.");
 
-        (new Stream(socket_create(AF_UNIX, SOCK_STREAM, 0)));
+        (new Stream(\socket_create(AF_UNIX, SOCK_STREAM, 0)));
     }
 
     /**
@@ -99,8 +99,8 @@ class StreamTest extends TestCase
      */
     public function testClose(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
-        $resource = fopen($file, 'r');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
+        $resource = \fopen($file, 'r');
 
         (new Stream($resource))->close();
 
@@ -114,17 +114,17 @@ class StreamTest extends TestCase
      */
     public function testCloseOnAlreadyClosed(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
-        $resource = fopen($file, 'r');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
+        $resource = \fopen($file, 'r');
 
         $stream = new Stream($resource);
         $stream->close();
 
-        $this->assertFalse(is_resource($resource));
+        $this->assertFalse(\is_resource($resource));
 
         $stream->close();
 
-        $this->assertFalse(is_resource($resource));
+        $this->assertFalse(\is_resource($resource));
     }
 
     /**
@@ -134,9 +134,9 @@ class StreamTest extends TestCase
      */
     public function testDetach(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
 
-        $stream = new Stream(fopen($file, 'r'));
+        $stream = new Stream(\fopen($file, 'r'));
 
         $this->assertIsResource($stream->detach());
     }
@@ -148,9 +148,9 @@ class StreamTest extends TestCase
      */
     public function testDetachOnAlreadyDetached(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
 
-        $stream = new Stream(fopen($file, 'r'));
+        $stream = new Stream(\fopen($file, 'r'));
 
         $this->assertIsResource($stream->detach());
         $this->assertNull($stream->detach());
@@ -163,9 +163,9 @@ class StreamTest extends TestCase
      */
     public function testGetSize(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
 
-        $stream = new Stream(fopen($file, 'w'));
+        $stream = new Stream(\fopen($file, 'w'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
@@ -181,9 +181,9 @@ class StreamTest extends TestCase
      */
     public function testGetSizeWithNoResource(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test');
 
-        $stream = new Stream(fopen($file, 'w'));
+        $stream = new Stream(\fopen($file, 'w'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->close();
 
@@ -197,9 +197,9 @@ class StreamTest extends TestCase
      */
     public function testTell(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
@@ -225,9 +225,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Resource not available.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
         $stream->close();
 
         $stream->tell();
@@ -240,9 +240,9 @@ class StreamTest extends TestCase
      */
     public function testEof(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
@@ -273,9 +273,9 @@ class StreamTest extends TestCase
      */
     public function testIsSeekable(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'r'));
+        $stream = new Stream(\fopen($file, 'r'));
 
         $this->assertTrue($stream->isSeekable());
 
@@ -304,9 +304,9 @@ class StreamTest extends TestCase
      */
     public function testRewind(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
@@ -377,18 +377,18 @@ class StreamTest extends TestCase
      */
     public function testIsWritable(string $mode, bool $result): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
         //http://php.net/manual/en/function.fopen.php
         //'x' 	Create and open for writing only; place the file pointer at the beginning of the file.
         //If the file already exists, the fopen() call will fail by returning FALSE and generating an
         //error of level E_WARNING. If the file does not exist, attempt to create it.
         //This is equivalent to specifying O_EXCL|O_CREAT flags for the underlying open(2) system call.
-        if (strpos($mode, 'x') !== false) {
-            unlink($file);
+        if (\strpos($mode, 'x') !== false) {
+            \unlink($file);
         }
 
-        $stream = new Stream(fopen($file, $mode));
+        $stream = new Stream(\fopen($file, $mode));
 
         $this->assertEquals($result, $stream->isWritable());
     }
@@ -400,9 +400,9 @@ class StreamTest extends TestCase
      */
     public function testIsWritableWithNoResource(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
         $stream->close();
 
         $this->assertFalse($stream->isWritable());
@@ -415,9 +415,9 @@ class StreamTest extends TestCase
      */
     public function testWrite(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
@@ -435,9 +435,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Resource not available.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
         $stream->close();
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
@@ -453,9 +453,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Stream is not writable.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'r'));
+        $stream = new Stream(\fopen($file, 'r'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
     }
 
@@ -500,18 +500,18 @@ class StreamTest extends TestCase
      */
     public function testIsReadable(string $mode, bool $result): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
         //http://php.net/manual/en/function.fopen.php
         //'x' 	Create and open for writing only; place the file pointer at the beginning of the file.
         //If the file already exists, the fopen() call will fail by returning FALSE and generating an
         //error of level E_WARNING. If the file does not exist, attempt to create it.
         //This is equivalent to specifying O_EXCL|O_CREAT flags for the underlying open(2) system call.
-        if (strpos($mode, 'x') !== false) {
-            unlink($file);
+        if (\strpos($mode, 'x') !== false) {
+            \unlink($file);
         }
 
-        $stream = new Stream(fopen($file, $mode));
+        $stream = new Stream(\fopen($file, $mode));
 
         $this->assertEquals($result, $stream->isReadable());
     }
@@ -523,9 +523,9 @@ class StreamTest extends TestCase
      */
     public function testRead(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
@@ -543,9 +543,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Resource not available.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->close();
 
@@ -562,9 +562,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Stream is not readable.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'w'));
+        $stream = new Stream(\fopen($file, 'w'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
         $stream->read(25);
@@ -577,9 +577,9 @@ class StreamTest extends TestCase
      */
     public function testGetContents(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'rw+'));
+        $stream = new Stream(\fopen($file, 'rw+'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
@@ -597,9 +597,9 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Stream is not readable.");
 
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'w'));
+        $stream = new Stream(\fopen($file, 'w'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
         $stream->getContents();
@@ -613,9 +613,9 @@ class StreamTest extends TestCase
      */
     public function testGetMetadata(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'wr+'));
+        $stream = new Stream(\fopen($file, 'wr+'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
@@ -665,9 +665,9 @@ class StreamTest extends TestCase
      */
     public function testGetMetadataWithSpecificKey(string $key): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'wr+'));
+        $stream = new Stream(\fopen($file, 'wr+'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
@@ -685,9 +685,9 @@ class StreamTest extends TestCase
      */
     public function testGetMetadataWithUnknownKey(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'stream_test_');
+        $file = \tempnam(\sys_get_temp_dir(), 'stream_test_');
 
-        $stream = new Stream(fopen($file, 'wr+'));
+        $stream = new Stream(\fopen($file, 'wr+'));
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 

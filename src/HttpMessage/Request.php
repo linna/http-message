@@ -47,7 +47,7 @@ class Request extends Message implements RequestInterface
     {
         $this->uri = $uri;
 
-        $this->method = $this->validateHttpMethod(strtoupper($method));
+        $this->method = $this->validateHttpMethod(\strtoupper($method));
 
         //from parent Message
         $this->body = new Stream($body, 'wb+');
@@ -65,7 +65,7 @@ class Request extends Message implements RequestInterface
      */
     private function validateHttpMethod(string $method): string
     {
-        if (in_array($method, [
+        if (\in_array($method, [
             'GET',
             'HEAD',
             'POST',
@@ -174,7 +174,7 @@ class Request extends Message implements RequestInterface
     public function withMethod(string $method): RequestInterface
     {
         $new = clone $this;
-        $new->method = $this->validateHttpMethod(strtoupper($method));
+        $new->method = $this->validateHttpMethod(\strtoupper($method));
 
         return $new;
     }
@@ -243,7 +243,7 @@ class Request extends Message implements RequestInterface
         $port = $uri->getPort();
 
         //exclude standard ports from host
-        if (!in_array($port, [80, 443])) {
+        if (!\in_array($port, [80, 443])) {
             $host .= ':' . $uri->getPort();
         }
 

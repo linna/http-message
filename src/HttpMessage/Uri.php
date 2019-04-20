@@ -78,7 +78,7 @@ class Uri implements UriInterface
      */
     public function __construct(string $uri)
     {
-        if (($parsedUrl = parse_url($uri)) === false) {
+        if (($parsedUrl = \parse_url($uri)) === false) {
             throw new InvalidArgumentException('Bad URI provided.');
         }
 
@@ -91,7 +91,7 @@ class Uri implements UriInterface
             'path'     => $this->path,
             'query'    => $this->query,
             'fragment' => $this->fragment,
-        ] = array_replace_recursive([
+        ] = \array_replace_recursive([
             'scheme'   => '',
             'host'     => '',
             'port'     => 0,
@@ -120,7 +120,7 @@ class Uri implements UriInterface
      */
     public function getScheme(): string
     {
-        return strtolower($this->scheme);
+        return \strtolower($this->scheme);
     }
 
     /**
@@ -201,7 +201,7 @@ class Uri implements UriInterface
      */
     public function getHost(): string
     {
-        return strtolower($this->host);
+        return \strtolower($this->host);
     }
 
     /**
@@ -225,7 +225,7 @@ class Uri implements UriInterface
         $port = $this->port;
 
         $standardPort = $this->checkStandardPortForCurretScheme($scheme, $port, $this->standardSchemes);
-        $standardScheme = array_key_exists($scheme, $this->standardSchemes);
+        $standardScheme = \array_key_exists($scheme, $this->standardSchemes);
 
         //scheme present and port standard - return 0
         //scheme present and port non standard - return port
@@ -336,7 +336,7 @@ class Uri implements UriInterface
      */
     public function withScheme(string $scheme): UriInterface
     {
-        if (array_key_exists($scheme, $this->standardSchemes)) {
+        if (\array_key_exists($scheme, $this->standardSchemes)) {
             $new = clone $this;
             $new->scheme = $scheme;
 
@@ -386,7 +386,7 @@ class Uri implements UriInterface
      */
     public function withHost(string $host): UriInterface
     {
-        if (filter_var($host, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME) === false) {
+        if (\filter_var($host, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME) === false) {
             throw new InvalidArgumentException('Invalid host provided.');
         }
 
@@ -453,11 +453,11 @@ class Uri implements UriInterface
      */
     public function withPath(string $path): UriInterface
     {
-        if (strpos($path, '?') !== false) {
+        if (\strpos($path, '?') !== false) {
             throw new InvalidArgumentException('Invalid path provided; must not contain a query string.');
         }
 
-        if (strpos($path, '#') !== false) {
+        if (\strpos($path, '#') !== false) {
             throw new InvalidArgumentException('Invalid path provided; must not contain a URI fragment.');
         }
 
@@ -486,9 +486,9 @@ class Uri implements UriInterface
      */
     public function withQuery(string $query): UriInterface
     {
-        if (strpos($query, '#') === false) {
+        if (\strpos($query, '#') === false) {
             $new = clone $this;
-            $new->query = (strpos($query, '?') !== false) ? substr($query, 1) : $query;
+            $new->query = (\strpos($query, '?') !== false) ? \substr($query, 1) : $query;
 
             return $new;
         }
@@ -516,7 +516,7 @@ class Uri implements UriInterface
     public function withFragment(string $fragment): UriInterface
     {
         $new = clone $this;
-        $new->fragment = (strpos($fragment, '#') !== false) ? substr($fragment, 1) : $fragment;
+        $new->fragment = (\strpos($fragment, '#') !== false) ? \substr($fragment, 1) : $fragment;
 
         return $new;
     }

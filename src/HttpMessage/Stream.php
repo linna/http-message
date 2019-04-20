@@ -35,29 +35,29 @@ class Stream implements StreamInterface
      */
     public function __construct($stream, string $mode = 'r')
     {
-        if (is_string($stream)) {
+        if (\is_string($stream)) {
             $error = null;
 
-            set_error_handler(function ($e) use (&$error) {
+            \set_error_handler(function ($e) use (&$error) {
                 if ($e === 2) {
                     $error = $e;
                 }
             });
 
-            $stream = fopen($stream, $mode);
+            $stream = \fopen($stream, $mode);
 
-            restore_error_handler();
+            \restore_error_handler();
 
             if ($error) {
                 throw new InvalidArgumentException('Invalid stream identifier provided.');
             }
         }
 
-        if (!is_resource($stream)) {
+        if (!\is_resource($stream)) {
             throw new InvalidArgumentException('Invalid resource provided.');
         }
 
-        if (get_resource_type($stream) !== 'stream') {
+        if (\get_resource_type($stream) !== 'stream') {
             throw new InvalidArgumentException('Resource provided is not a stream.');
         }
 
@@ -102,7 +102,7 @@ class Stream implements StreamInterface
             return;
         }
 
-        fclose($this->resource);
+        \fclose($this->resource);
         $this->resource = null;
     }
 
@@ -132,7 +132,7 @@ class Stream implements StreamInterface
      */
     public function getSize(): int
     {
-        return (!$this->resource) ? 0 : fstat($this->resource)['size'];
+        return (!$this->resource) ? 0 : \fstat($this->resource)['size'];
     }
 
     /**
@@ -148,7 +148,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Resource not available.');
         }
 
-        if (($position = ftell($this->resource)) === false) {
+        if (($position = \ftell($this->resource)) === false) {
             throw new RuntimeException('Error occurred during tell operation.');
         }
 
@@ -166,7 +166,7 @@ class Stream implements StreamInterface
             return true;
         }
 
-        return feof($this->resource);
+        return \feof($this->resource);
     }
 
     /**
@@ -176,7 +176,7 @@ class Stream implements StreamInterface
      */
     public function isSeekable(): bool
     {
-        return (!$this->resource) ? false : stream_get_meta_data($this->resource)['seekable'];
+        return (!$this->resource) ? false : \stream_get_meta_data($this->resource)['seekable'];
     }
 
     /**
@@ -203,7 +203,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Can not seek the stream.');
         }
 
-        if (fseek($this->resource, $offset, $whence) !== 0) {
+        if (\fseek($this->resource, $offset, $whence) !== 0) {
             throw new RuntimeException('Error seeking within stream.');
         }
 
@@ -224,7 +224,7 @@ class Stream implements StreamInterface
      */
     public function rewind()
     {
-        if (!$this->isSeekable() || rewind($this->resource) === false) {
+        if (!$this->isSeekable() || \rewind($this->resource) === false) {
             throw new RuntimeException('Can not rewind the stream.');
         }
     }
@@ -238,10 +238,10 @@ class Stream implements StreamInterface
      */
     protected function can(array $modes): bool
     {
-        $metaMode = stream_get_meta_data($this->resource)['mode'];
+        $metaMode = \stream_get_meta_data($this->resource)['mode'];
 
         foreach ($modes as $mode) {
-            if (strpos($metaMode, $mode) !== false) {
+            if (\strpos($metaMode, $mode) !== false) {
                 return true;
             }
         }
@@ -278,7 +278,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Stream is not writable.');
         }
 
-        if (($bytes = fwrite($this->resource, $string)) === false) {
+        if (($bytes = \fwrite($this->resource, $string)) === false) {
             throw new RuntimeException('Error writing stream.');
         }
 
@@ -317,7 +317,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Stream is not readable.');
         }
 
-        if (($data = fread($this->resource, $length)) === false) {
+        if (($data = \fread($this->resource, $length)) === false) {
             throw new RuntimeException('Error reading stream.');
         }
 
@@ -338,7 +338,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Stream is not readable.');
         }
 
-        if (($content = stream_get_contents($this->resource)) === false) {
+        if (($content = \stream_get_contents($this->resource)) === false) {
             throw new RuntimeException('Error reading stream.');
         }
 
@@ -366,7 +366,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('Resource not available.');
         }
 
-        $metadata = stream_get_meta_data($this->resource);
+        $metadata = \stream_get_meta_data($this->resource);
 
         //if key is empty string
         return ($key === '') ?
