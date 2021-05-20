@@ -3,7 +3,7 @@
 /**
  * Linna Http Message.
  *
- * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
+ * @author Sebastian Rapetti <sebastian.rapetti@tim.it>
  * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
@@ -84,13 +84,14 @@ class StreamTest extends TestCase
      *
      * @return void
      */
-    public function testNewInstanceWithNotSreamResource(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Resource provided is not a stream.");
+    //in PHP 8 sockets are not anymore resources
+    //public function testNewInstanceWithNotSreamResource(): void
+    //{
+        //$this->expectException(InvalidArgumentException::class);
+        //$this->expectExceptionMessage("Resource provided is not a stream.");
 
-        (new Stream(\socket_create(AF_UNIX, SOCK_STREAM, 0)));
-    }
+        //(new Stream(\socket_create(AF_UNIX, SOCK_STREAM, 0)));
+    //}
 
     /**
      * Test close.

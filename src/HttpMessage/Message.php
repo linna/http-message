@@ -3,7 +3,7 @@
 /**
  * Linna Http Message.
  *
- * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
+ * @author Sebastian Rapetti <sebastian.rapetti@tim.it>
  * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
@@ -22,19 +22,19 @@ use Psr\Http\Message\StreamInterface;
 abstract class Message implements MessageInterface
 {
     /**
-     * @var string Protocol version.
+     * @var StreamInterface Body of the message.
      */
-    protected $protocolVersion = '1.1';
-
+    protected StreamInterface $body;
+    
     /**
      * @var array Message headers .
      */
-    protected $headers = [];
-
+    protected array $headers = [];
+    
     /**
-     * @var StreamInterface Body of the message.
+     * @var string Protocol version.
      */
-    protected $body;
+    protected string $protocolVersion = '1.1';
 
     /**
      * Retrieves the HTTP protocol version as a string.

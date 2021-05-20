@@ -17,12 +17,13 @@
     "require": {
         "php": ">=7.2",
         "s3b4stian/http-message": "dev-master",
-        "linna/typed-array" :  "^2.0"
+        "linna/typed-array" :  "^2.0",
+        "fig/http-message-util" : "^1"
     },
     "require-dev": {
-        "infection/infection": "^0.12",
-        "phpstan/phpstan": "^0.11",
-        "phpunit/phpunit": "^8.0"
+        "infection/infection": "^0.21",
+        "phpstan/phpstan": "^0.12",
+        "phpunit/phpunit": "^9.0"
     },
     "provide": {
         "psr/http-message-implementation": "1.0"

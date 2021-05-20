@@ -3,7 +3,7 @@
 /**
  * Linna Http Message.
  *
- * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
+ * @author Sebastian Rapetti <sebastian.rapetti@tim.it>
  * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Linna\Http\Message;
 
 use InvalidArgumentException;
+use Linna\Http\Message\Helper\HttpMethod;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -23,35 +24,54 @@ class Request extends Message implements RequestInterface
     /**
      * @var string Request HTTP method (GET, POST, PUT.....).
      */
-    protected $method = '';
+    protected string $method = '';
 
     /**
      * @var string Request target.
      */
-    protected $target = '';
+    protected string $target = '';
 
     /**
      * @var UriInterface Request uri.
      */
-    protected $uri;
+    protected UriInterface $uri;
 
     /**
      * Class Constructor.
      *
-     * @param UriInterface $uri
      * @param string       $method
-     * @param string       $body
+     * @param UriInterface $uri
      * @param array        $headers
+     * @param string       $body
+     * @param string       $version
      */
-    public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [])
+    public function __construct(
+            string       $method,
+            UriInterface $uri,
+            array        $headers = [],
+            string       $body    = 'php://memory',
+            string       $version = '1.1'
+        )
     {
-        $this->uri = $uri;
-
-        $this->method = $this->validateHttpMethod(\strtoupper($method));
-
-        //from parent Message
+        //from message abstract class
+        //protected $body;
+        //protected $headers = [];        
+        //protected $protocolVersion = '1.1';
+        
+        //message body
         $this->body = new Stream($body, 'wb+');
-        $this->headers = $headers;
+        //message headers
+        $this->headers = array_merge(['host' => $uri->getHost()], $headers);
+        //message protocol version
+        $this->protocolVersion = $version;
+
+
+        //request method
+        $this->method = $this->validateHttpMethod(\strtoupper($method));
+        //request uri
+        $this->uri = $uri;
+        //request target
+        $this->target = $this->getRequestTarget();
     }
 
     /**
@@ -63,17 +83,19 @@ class Request extends Message implements RequestInterface
      *
      * @throws InvalidArgumentException if passed method is not an HTTP valid method.
      */
-    private function validateHttpMethod(string $method): string
+    protected function validateHttpMethod(string $method): string
     {
         if (\in_array($method, [
-            'GET',
-            'HEAD',
-            'POST',
-            'PUT',
-            'DELETE',
-            'CONNECT',
-            'OPTIONS',
-            'TRACE'
+                HttpMethod::METHOD_GET,
+                HttpMethod::METHOD_HEAD,
+                HttpMethod::METHOD_POST,
+                HttpMethod::METHOD_PUT,
+                HttpMethod::METHOD_PATCH,
+                HttpMethod::METHOD_DELETE,
+                HttpMethod::METHOD_PURGE,
+                HttpMethod::METHOD_OPTIONS,
+                HttpMethod::METHOD_TRACE,
+                HttpMethod::METHOD_CONNECT
             ])) {
             return $method;
         }
