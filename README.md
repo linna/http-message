@@ -12,10 +12,7 @@
 
 <div align="center">
 
-[![Build Status](https://travis-ci.org/linna/http-message.svg?branch=master)](https://travis-ci.org/linna/http-message)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/http-message/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/linna/http-message/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
-[![StyleCI](https://github.styleci.io/repos/96924222/shield?branch=master&style=flat)](https://github.styleci.io/repos/96924222)
+[![Tests](https://github.com/linna/http-message/actions/workflows/tests.yml/badge.svg)](https://github.com/linna/http-message/actions/workflows/tests.yml)
 [![PHP 8.1](https://img.shields.io/badge/PHP-8.1-8892BF.svg)](http://php.net)
 
 </div>
