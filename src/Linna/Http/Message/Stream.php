@@ -356,7 +356,7 @@ class Stream implements StreamInterface
         $metadata = \stream_get_meta_data($this->resource);
 
         //if key is empty string
-        return is_null($key) ?
+        return \is_null($key) ?
             //return metadata
             $metadata :
             //else check if key exist and if key exist return as array else return void array

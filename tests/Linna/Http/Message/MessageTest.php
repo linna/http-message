@@ -170,7 +170,21 @@ class MessageTest extends TestCase
      *
      * @return void
      */
-    public function testWithHeader(): void
+    public function testWithHeaderValueAsString(): void
+    {
+        $message = self::$message->withHeader('X-Foo', 'Foo');
+
+        $this->assertNotSame(self::$message, $message);
+        $this->assertSame([], self::$message->getHeaders());
+        $this->assertSame(['X-Foo' => ['Foo']], $message->getHeaders());
+    }
+
+    /**
+     * Test with header.
+     *
+     * @return void
+     */
+    public function testWithHeaderValueAsArray(): void
     {
         $message = self::$message->withHeader('X-Foo', ['Foo']);
 

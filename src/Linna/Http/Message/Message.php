@@ -136,7 +136,7 @@ abstract class Message implements MessageInterface
     {
         $this->normalize($name);
 
-        return isset($this->headers[$name]) ? $this->headers[$name] : [];
+        return $this->headers[$name] ?? [];
     }
 
     /**
@@ -187,7 +187,7 @@ abstract class Message implements MessageInterface
         $new = clone $this;
 
         //use typed array for assicure that array contains only strings
-        $new->headers[$name] = (new TypedArray('string', $value))->getArrayCopy();
+        $new->headers[$name] = \is_string($value) ? [$value] : $value;
 
         return $new;
     }
