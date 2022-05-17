@@ -11,14 +11,27 @@ declare(strict_types=1);
 
 namespace Linna\Http\Message;
 
-use InvalidArgumentException;
+use Fig\Http\Message;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * PSR-7 Response implementation.
  */
-class Response extends Message implements ResponseInterface
+class Response extends Message implements ResponseInterface, StatusCodeInterface
 {
+    /**
+     * Class Constructor.
+     *
+     * @param int $code The 3-digit integer result code to set.
+     * @param string $reasonPhrase The reason phrase to use with the
+     *     provided status code; if none is provided, implementations MAY
+     *     use the defaults as suggested in the HTTP specification.
+     */
+    public function __construct(
+        protected int $code,
+        protected string $reasonPhrase = '')
+    {}
+
     /**
      * Gets the response status code.
      *
@@ -29,6 +42,7 @@ class Response extends Message implements ResponseInterface
      */
     public function getStatusCode(): int
     {
+        return $this->code;
     }
 
     /**
@@ -53,6 +67,11 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
+        $new = clone $this;
+        $new->code = $code;
+        $new->reasonPhrase = $reasonPhrase;
+
+        return $new;
     }
 
     /**
@@ -70,5 +89,6 @@ class Response extends Message implements ResponseInterface
      */
     public function getReasonPhrase(): string
     {
+        return $this->reasonPhrase;
     }
 }

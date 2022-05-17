@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Linna\Http\Message;
 
 use InvalidArgumentException;
-use Linna\TypedArray;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -24,17 +23,24 @@ abstract class Message implements MessageInterface
     /**
      * @var string Protocol version.
      */
-    protected $protocolVersion = '1.1';
+    //protected string $protocolVersion = '1.1';
 
     /**
      * @var array Message headers .
      */
-    protected $headers = [];
+    //protected array $headers = [];
 
     /**
      * @var StreamInterface Body of the message.
      */
-    protected $body;
+    //protected StreamInterface $body;
+    
+    public function __construct(
+        private ?StreamInterface $body = null,
+        private string $protocolVersion = '1.1',
+        private array $headers = [],
+    )
+    {}
 
     /**
      * Retrieves the HTTP protocol version as a string.
@@ -213,7 +219,7 @@ abstract class Message implements MessageInterface
         $this->normalize($name);
 
         //use typed array for assicure that array contains only strings
-        $headerValue = (new TypedArray('string', $value))->getArrayCopy();
+        $headerValue = \is_string($value) ? [$value] : $value;
 
         $new = clone $this;
 

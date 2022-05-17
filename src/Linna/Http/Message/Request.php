@@ -11,29 +11,31 @@ declare(strict_types=1);
 
 namespace Linna\Http\Message;
 
+use Fig\Http\Message\RequestMethodInterface;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use ReflectionClass;
 
 /**
  * PSR-7 Request implementation.
  */
-class Request extends Message implements RequestInterface
+class Request extends Message implements RequestInterface, RequestMethodInterface
 {
     /**
      * @var string Request HTTP method (GET, POST, PUT.....).
      */
-    protected $method = '';
+    private $method = '';
 
     /**
      * @var string Request target.
      */
-    protected $target = '';
+    private $target = '';
 
     /**
      * @var UriInterface Request uri.
      */
-    protected $uri;
+    private $uri;
 
     /**
      * Class Constructor.
@@ -43,15 +45,14 @@ class Request extends Message implements RequestInterface
      * @param string       $body
      * @param array        $headers
      */
-    public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [])
+    public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [], string $protocolVersion = '1.1')
     {
         $this->uri = $uri;
 
         $this->method = $this->validateHttpMethod(\strtoupper($method));
 
-        //from parent Message
-        $this->body = new Stream($body, 'wb+');
-        $this->headers = $headers;
+        //message constructor
+        parent::__construct(new Stream($body, 'wb+'), $protocolVersion, $headers);
     }
 
     /**
@@ -65,16 +66,7 @@ class Request extends Message implements RequestInterface
      */
     private function validateHttpMethod(string $method): string
     {
-        if (\in_array($method, [
-            'GET',
-            'HEAD',
-            'POST',
-            'PUT',
-            'DELETE',
-            'CONNECT',
-            'OPTIONS',
-            'TRACE'
-            ])) {
+        if ((new ReflectionClass($this))->hasConstant("METHOD_{$method}")) {
             return $method;
         }
 
@@ -221,6 +213,7 @@ class Request extends Message implements RequestInterface
      */
     public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
+        // preserve host
         $new = clone $this;
         $new->uri = $uri;
 
@@ -231,6 +224,7 @@ class Request extends Message implements RequestInterface
         if (empty($uri->getHost())) {
             return $new;
         }
+        //end preserve host
 
         $host = $uri->getHost();
         $port = $uri->getPort();
@@ -240,9 +234,6 @@ class Request extends Message implements RequestInterface
             $host .= ':' . $uri->getPort();
         }
 
-        $new = $new->withoutHeader('host');
-        $new->headers['Host'] = [$host];
-
-        return $new;
+        return $new->withoutHeader('host')->withHeader('Host', $host);
     }
 }

@@ -60,6 +60,72 @@ use Psr\Http\Message\UploadedFileInterface;
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
+     * @var array Attributes
+     */
+    private array $attributes = [];
+
+    /**
+     * @var array Cookie values
+     */
+    private array $cookieParams = [];
+
+    /**
+     * var null|array|object Parsed body of the request
+     */
+    private null | array | object $parsedBody = [];
+
+    /**
+     * @var array Query params from $_GET
+     */
+    private array $queryParams = [];
+
+    /**
+     * @var array Server params from $_SERVER
+     */
+    private array $serverParams = [];
+
+    /**
+     * Class Constructor.
+     *
+     * @param string       $method
+     * @param UriInterface $uri
+     * @param string       $body
+     * @param array        $headers
+     * @param string       $version
+     */
+    public function __construct(
+        string       $method,
+        UriInterface $uri,
+        array        $headers = [],
+        string       $body    = 'php://memory',
+        string       $version = '1.1'
+    ) {
+        //from message abstract class
+        //protected $body;
+        //protected $headers = [];
+        //protected $protocolVersion = '1.1';
+
+        //message body
+        $this->body = new Stream($body, 'wb+');
+        //message headers
+        $this->headers = $headers;
+        //message protocol version
+        $this->protocolVersion = $version;
+
+        //from request class
+        //protected $method = '';
+        //protected $target = '';
+        //protected $uri;
+
+        //request method
+        $this->method = $this->validateHttpMethod(\strtoupper($method));
+        //requst target
+        $this->target = $this->getRequestTarget();
+        //request uri
+        $this->uri = $uri;
+    }
+
+    /**
      * Retrieve server parameters.
      *
      * Retrieves data related to the incoming request environment,
@@ -70,6 +136,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getServerParams(): array
     {
+        return $this->serverParams;
     }
 
     /**
@@ -84,6 +151,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getCookieParams(): array
     {
+        $this->cookieParams;
     }
 
     /**
@@ -105,6 +173,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies): ServerRequestInterface
     {
+        $new = clone $this;
+        $new->cookieParams = $cookies;
+
+        return $new;
     }
 
     /**
@@ -121,6 +193,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getQueryParams(): array
     {
+        return $this->queryParams;
     }
 
     /**
@@ -147,6 +220,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withQueryParams(array $query): ServerRequestInterface
     {
+        $new = clone $this;
+        $new->queryParams = $query;
+
+        return $new;
     }
 
     /**
@@ -163,6 +240,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getUploadedFiles(): array
     {
+        return $this->uploadedFiles;
     }
 
     /**
@@ -178,6 +256,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
+        $new = clone $this;
+        $new->uploadedFiles = $uploadedFiles;
+
+        return $new;
     }
 
     /**
@@ -197,6 +279,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getParsedBody(): mixed
     {
+        return $this->parsedBody;
     }
 
     /**
@@ -229,6 +312,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withParsedBody(null|array|object $data): ServerRequestInterface
     {
+        $new = clone $this;
+        //accept only values of type null, array or object
+        $new->parsedBody = $data;
+
+        return $new;
     }
 
     /**
@@ -244,6 +332,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getAttributes(): array
     {
+        return $this->attributes;
     }
 
     /**
@@ -263,6 +352,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getAttribute(string $name, mixed $default = null): mixed
     {
+        if (isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        }
+
+        return $default;
     }
 
     /**
@@ -282,6 +376,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withAttribute(string $name, mixed $value): ServerRequestInterface
     {
+        $new = clone $this;
+        $new->attributes[$name] = $value;
+
+        return $new;
     }
 
     /**
@@ -300,5 +398,13 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withoutAttribute(string $name): ServerRequestInterface
     {
+        if (!isset($this->attributes[$name])) {
+            return $this;
+        }
+
+        $new = clone $this;
+        unset($new->attributes[$name]);
+
+        return $new;
     }
 }

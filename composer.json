@@ -17,7 +17,7 @@
     "require": {
         "php": ">=7.2",
         "s3b4stian/http-message": "dev-master",
-        "linna/typed-array" :  "^2.0"
+        "fig/http-message-util" : ">=1.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=9.0"
