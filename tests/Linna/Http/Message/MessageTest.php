@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace Linna\Tests;
+namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Linna\Http\Message\Message;
@@ -34,7 +34,7 @@ class MessageTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        self::$message = new class() extends Message {
+        self::$message = new class () extends Message {
         };
     }
 

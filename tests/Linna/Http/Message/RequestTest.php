@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace Linna\Tests;
+namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Linna\Http\Message\Request;

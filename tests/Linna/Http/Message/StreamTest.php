@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace Linna\Tests;
+namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Linna\Http\Message\Stream;
@@ -84,13 +84,13 @@ class StreamTest extends TestCase
      *
      * @return void
      */
-    public function testNewInstanceWithNotSreamResource(): void
+    /*public function testNewInstanceWithNotSreamResource(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Resource provided is not a stream.");
 
         (new Stream(\socket_create(AF_UNIX, SOCK_STREAM, 0)));
-    }
+    }*/
 
     /**
      * Test close.

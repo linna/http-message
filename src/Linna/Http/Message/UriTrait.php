@@ -35,7 +35,7 @@ trait UriTrait
         string $path,
         string $query,
         string $fragment
-            ): string {
+    ): string {
         $uri = $scheme.$authority;
 
         $path = ('/' !== \substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
@@ -58,7 +58,7 @@ trait UriTrait
         string $scheme,
         bool $standardScheme,
         array $supportedSchemes
-            ): int {
+    ): int {
         return (!$port && $standardScheme) ? $supportedSchemes[$scheme] : $port;
     }
 

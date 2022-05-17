@@ -59,10 +59,7 @@ abstract class Message implements MessageInterface
      * new protocol version.
      *
      * @param string $version HTTP protocol version
-     *
-     * @return MessageInterface
-     *
-     * @throws InvalidArgumentException if provided protocol version is invalid.
+     * @return static
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
@@ -97,9 +94,9 @@ abstract class Message implements MessageInterface
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return string[][] Returns an associative array of the message's headers.
-     *                    Each key MUST be a header name, and each value MUST be
-     *                    an array of strings for that header.
+     * @return string[][] Returns an associative array of the message's headers. Each
+     *     key MUST be a header name, and each value MUST be an array of strings
+     *     for that header.
      */
     public function getHeaders(): array
     {
@@ -110,10 +107,9 @@ abstract class Message implements MessageInterface
      * Checks if a header exists by the given case-insensitive name.
      *
      * @param string $name Case-insensitive header field name.
-     *
-     * @return bool Returns true if any header names match the given header name
-     *              using a case-insensitive string comparison. Returns false if
-     *              no matching header name is found in the message.
+     * @return bool Returns true if any header names match the given header
+     *     name using a case-insensitive string comparison. Returns false if
+     *     no matching header name is found in the message.
      */
     public function hasHeader(string $name): bool
     {
@@ -132,10 +128,9 @@ abstract class Message implements MessageInterface
      * empty array.
      *
      * @param string $name Case-insensitive header field name.
-     *
-     * @return string[] An array of string values as provided for the given header.
-     *                  If the header does not appear in the message, this method MUST
-     *                  return an empty array.
+     * @return string[] An array of string values as provided for the given
+     *    header. If the header does not appear in the message, this method MUST
+     *    return an empty array.
      */
     public function getHeader(string $name): array
     {
@@ -159,10 +154,9 @@ abstract class Message implements MessageInterface
      * an empty string.
      *
      * @param string $name Case-insensitive header field name.
-     *
-     * @return string A string of values as provided for the given header concatenated
-     *                together using a comma. If the header does not appear in
-     *                the message, this method MUST return an empty string.
+     * @return string A string of values as provided for the given header
+     *    concatenated together using a comma. If the header does not appear in
+     *    the message, this method MUST return an empty string.
      */
     public function getHeaderLine(string $name): string
     {
@@ -182,13 +176,11 @@ abstract class Message implements MessageInterface
      * new and/or updated header and value.
      *
      * @param string $name Case-insensitive header field name.
-     * @param string[] $value Header value(s).
-     *
+     * @param string|string[] $value Header value(s).
      * @return static
-     *
-     * @throws InvalidArgumentException for invalid header names or values.
+     * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader(string $name, array $value): MessageInterface
+    public function withHeader(string $name, string|array $value): MessageInterface
     {
         $this->normalize($name);
 
@@ -212,13 +204,11 @@ abstract class Message implements MessageInterface
      * new header and/or value.
      *
      * @param string $name Case-insensitive header field name to add.
-     * @param string[] $value Header value(s).
-     *
+     * @param string|string[] $value Header value(s).
      * @return static
-     *
-     * @throws InvalidArgumentException for invalid header names or values.
+     * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader(string $name, array $value): MessageInterface
+    public function withAddedHeader(string $name, string|array $value): MessageInterface
     {
         $this->normalize($name);
 
@@ -251,7 +241,6 @@ abstract class Message implements MessageInterface
      * the named header.
      *
      * @param string $name Case-insensitive header field name to remove.
-     *
      * @return static
      */
     public function withoutHeader(string $name): MessageInterface
@@ -284,10 +273,8 @@ abstract class Message implements MessageInterface
      * new body stream.
      *
      * @param StreamInterface $body Body.
-     *
      * @return static
-     *
-     * @throws InvalidArgumentException When the body is not valid.
+     * @throws \InvalidArgumentException When the body is not valid.
      */
     public function withBody(StreamInterface $body): MessageInterface
     {

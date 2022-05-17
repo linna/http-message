@@ -115,7 +115,6 @@ class Uri implements UriInterface
      * added.
      *
      * @see https://tools.ietf.org/html/rfc3986#section-3.1
-     *
      * @return string The URI scheme.
      */
     public function getScheme(): string
@@ -139,7 +138,6 @@ class Uri implements UriInterface
      * scheme, it SHOULD NOT be included.
      *
      * @see https://tools.ietf.org/html/rfc3986#section-3.2
-     *
      * @return string The URI authority, in "[user-info@]host[:port]" format.
      */
     public function getAuthority(): string
@@ -151,11 +149,11 @@ class Uri implements UriInterface
         $authority = $this->host;
 
         if ($this->user !== '') {
-            $authority = $this->getUserInfo().'@'.$authority;
+            $authority = "{$this->getUserInfo()}@{$authority}";
         }
 
-        if ($this->port !== 0) {
-            $authority .= ':'.$this->port;
+        if ($this->port !== 0 && $this->port !== null) {
+            $authority = "{$authority}:{$this->port}";
         }
 
         return $authority;
@@ -181,7 +179,7 @@ class Uri implements UriInterface
         $user = $this->user;
 
         if ($this->pass !== '' && $this->pass !== null) {
-            $user .= ':'.$this->pass;
+            $user = "{$user}:{$this->pass}";
         }
 
         return ($user !== '') ? $user : '';
@@ -196,7 +194,6 @@ class Uri implements UriInterface
      * Section 3.2.2.
      *
      * @see http://tools.ietf.org/html/rfc3986#section-3.2.2
-     *
      * @return string The URI host.
      */
     public function getHost(): string
@@ -212,17 +209,21 @@ class Uri implements UriInterface
      * used with the current scheme, this method SHOULD return null.
      *
      * If no port is present, and no scheme is present, this method MUST return
-     * a zero value.
+     * a null value.
      *
      * If no port is present, but a scheme is present, this method MAY return
-     * the standard port for that scheme, but SHOULD return zero.
+     * the standard port for that scheme, but SHOULD return null.
      *
-     * @return int The URI port.
+     * @return null|int The URI port.
      */
-    public function getPort(): int
+    public function getPort(): ?int
     {
         $scheme = $this->scheme;
         $port = $this->port;
+
+        if ($port === null) {
+            return null;
+        }
 
         $standardPort = $this->checkStandardPortForCurretScheme($scheme, $port, $this->standardSchemes);
         $standardScheme = \array_key_exists($scheme, $this->standardSchemes);
@@ -261,7 +262,6 @@ class Uri implements UriInterface
      *
      * @see https://tools.ietf.org/html/rfc3986#section-2
      * @see https://tools.ietf.org/html/rfc3986#section-3.3
-     *
      * @return string The URI path.
      */
     public function getPath(): string
@@ -287,7 +287,6 @@ class Uri implements UriInterface
      *
      * @see https://tools.ietf.org/html/rfc3986#section-2
      * @see https://tools.ietf.org/html/rfc3986#section-3.4
-     *
      * @return string The URI query string.
      */
     public function getQuery(): string
@@ -309,7 +308,6 @@ class Uri implements UriInterface
      *
      * @see https://tools.ietf.org/html/rfc3986#section-2
      * @see https://tools.ietf.org/html/rfc3986#section-3.5
-     *
      * @return string The URI fragment.
      */
     public function getFragment(): string
@@ -329,10 +327,8 @@ class Uri implements UriInterface
      * An empty scheme is equivalent to removing the scheme.
      *
      * @param string $scheme The scheme to use with the new instance.
-     *
      * @return static A new instance with the specified scheme.
-     *
-     * @throws InvalidArgumentException for invalid or unsupported schemes.
+     * @throws \InvalidArgumentException for invalid or unsupported schemes.
      */
     public function withScheme(string $scheme): UriInterface
     {
@@ -357,11 +353,10 @@ class Uri implements UriInterface
      * information.
      *
      * @param string $user The user name to use for authority.
-     * @param string $password The password associated with $user.
-     *
+     * @param null|string $password The password associated with $user.
      * @return static A new instance with the specified user information.
      */
-    public function withUserInfo(string $user, string $password = ''): UriInterface
+    public function withUserInfo(string $user, ?string $password = null): UriInterface
     {
         $new = clone $this;
         $new->user = $user;
@@ -379,10 +374,8 @@ class Uri implements UriInterface
      * An empty host value is equivalent to removing the host.
      *
      * @param string $host The hostname to use with the new instance.
-     *
      * @return static A new instance with the specified host.
-     *
-     * @throws InvalidArgumentException for invalid hostnames.
+     * @throws \InvalidArgumentException for invalid hostnames.
      */
     public function withHost(string $host): UriInterface
     {
@@ -405,18 +398,23 @@ class Uri implements UriInterface
      * Implementations MUST raise an exception for ports outside the
      * established TCP and UDP port ranges.
      *
-     * A zero value provided for the port is equivalent to removing the port
+     * A null value provided for the port is equivalent to removing the port
      * information.
      *
-     * @param int $port The port to use with the new instance; a zero value
-     *                  removes the port information.
-     *
+     * @param null|int $port The port to use with the new instance; a null value
+     *     removes the port information.
      * @return static A new instance with the specified port.
-     *
-     * @throws InvalidArgumentException for invalid ports.
+     * @throws \InvalidArgumentException for invalid ports.
      */
-    public function withPort(int $port = 0): UriInterface
+    public function withPort(?int $port): UriInterface
     {
+        if ($port == null) {
+            $new = clone $this;
+            $new->port = null;
+
+            return $new;
+        }
+
         if ($port > -1 && $port < 65536) {
             $new = clone $this;
             $new->port = $port;
@@ -446,10 +444,8 @@ class Uri implements UriInterface
      * Implementations ensure the correct encoding as outlined in getPath().
      *
      * @param string $path The path to use with the new instance.
-     *
      * @return static A new instance with the specified path.
-     *
-     * @throws InvalidArgumentException for invalid paths.
+     * @throws \InvalidArgumentException for invalid paths.
      */
     public function withPath(string $path): UriInterface
     {
@@ -479,10 +475,8 @@ class Uri implements UriInterface
      * An empty query string value is equivalent to removing the query string.
      *
      * @param string $query The query string to use with the new instance.
-     *
      * @return static A new instance with the specified query string.
-     *
-     * @throws InvalidArgumentException for invalid query strings.
+     * @throws \InvalidArgumentException for invalid query strings.
      */
     public function withQuery(string $query): UriInterface
     {
@@ -510,7 +504,6 @@ class Uri implements UriInterface
      * An empty fragment value is equivalent to removing the fragment.
      *
      * @param string $fragment The fragment to use with the new instance.
-     *
      * @return static A new instance with the specified fragment.
      */
     public function withFragment(string $fragment): UriInterface

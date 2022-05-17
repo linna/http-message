@@ -19,6 +19,43 @@ use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * PSR-7 ServerRequest implementation.
+ *
+ * Representation of an incoming, server-side HTTP request.
+ *
+ * Per the HTTP specification, this interface includes properties for
+ * each of the following:
+ *
+ * - Protocol version
+ * - HTTP method
+ * - URI
+ * - Headers
+ * - Message body
+ *
+ * Additionally, it encapsulates all data as it has arrived to the
+ * application from the CGI and/or PHP environment, including:
+ *
+ * - The values represented in $_SERVER.
+ * - Any cookies provided (generally via $_COOKIE)
+ * - Query string arguments (generally via $_GET, or as parsed via parse_str())
+ * - Upload files, if any (as represented by $_FILES)
+ * - Deserialized body parameters (generally from $_POST)
+ *
+ * $_SERVER values MUST be treated as immutable, as they represent application
+ * state at the time of request; as such, no methods are provided to allow
+ * modification of those values. The other values provide such methods, as they
+ * can be restored from $_SERVER or the request body, and may need treatment
+ * during the application (e.g., body parameters may be deserialized based on
+ * content type).
+ *
+ * Additionally, this interface recognizes the utility of introspecting a
+ * request to derive and match additional parameters (e.g., via URI path
+ * matching, decrypting cookie values, deserializing non-form-encoded body
+ * content, matching authorization headers to users, etc). These parameters
+ * are stored in an "attributes" property.
+ *
+ * Requests are considered immutable; all methods that might change state MUST
+ * be implemented such that they retain the internal state of the current
+ * message and return an instance that contains the changed state.
  */
 class ServerRequest extends Request implements ServerRequestInterface
 {
@@ -64,7 +101,6 @@ class ServerRequest extends Request implements ServerRequestInterface
      * updated cookie values.
      *
      * @param array $cookies Array of key/value pairs representing cookies.
-     *
      * @return static
      */
     public function withCookieParams(array $cookies): ServerRequestInterface
@@ -105,8 +141,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * updated query string arguments.
      *
-     * @param array $query Array of query string arguments, typically from $_GET.
-     *
+     * @param array $query Array of query string arguments, typically from
+     *     $_GET.
      * @return static
      */
     public function withQueryParams(array $query): ServerRequestInterface
@@ -123,7 +159,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * instantiation, or MAY be injected via withUploadedFiles().
      *
      * @return array An array tree of UploadedFileInterface instances; an empty
-     *               array MUST be returned if no data is present.
+     *     array MUST be returned if no data is present.
      */
     public function getUploadedFiles(): array
     {
@@ -137,10 +173,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      * updated body parameters.
      *
      * @param array $uploadedFiles An array tree of UploadedFileInterface instances.
-     *
      * @return static
-     *
-     * @throws InvalidArgumentException if an invalid structure is provided.
+     * @throws \InvalidArgumentException if an invalid structure is provided.
      */
     public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
@@ -159,9 +193,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      * the absence of body content.
      *
      * @return null|array|object The deserialized body parameters, if any.
-     *                           These will typically be an array or object.
+     *     These will typically be an array or object.
      */
-    public function getParsedBody()
+    public function getParsedBody(): mixed
     {
     }
 
@@ -188,13 +222,12 @@ class ServerRequest extends Request implements ServerRequestInterface
      * updated body parameters.
      *
      * @param null|array|object $data The deserialized body data. This will
-     *                                typically be in an array or object.
-     *
+     *     typically be in an array or object.
      * @return static
-     *
-     * @throws InvalidArgumentException if an unsupported argument type is provided.
+     * @throws \InvalidArgumentException if an unsupported argument type is
+     *     provided.
      */
-    public function withParsedBody($data)
+    public function withParsedBody(null|array|object $data): ServerRequestInterface
     {
     }
 
@@ -224,13 +257,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      * specifying a default value to return if the attribute is not found.
      *
      * @see getAttributes()
-     *
      * @param string $name The attribute name.
      * @param mixed $default Default value to return if the attribute does not exist.
-     *
      * @return mixed
      */
-    public function getAttribute(string $name, $default = null)
+    public function getAttribute(string $name, mixed $default = null): mixed
     {
     }
 
@@ -245,13 +276,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      * updated attribute.
      *
      * @see getAttributes()
-     *
      * @param string $name The attribute name.
      * @param mixed $value The value of the attribute.
-     *
      * @return static
      */
-    public function withAttribute(string $name, $value): ServerRequestInterface
+    public function withAttribute(string $name, mixed $value): ServerRequestInterface
     {
     }
 
@@ -266,9 +295,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * the attribute.
      *
      * @see getAttributes()
-     *
      * @param string $name The attribute name.
-     *
      * @return static
      */
     public function withoutAttribute(string $name): ServerRequestInterface

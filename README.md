@@ -16,9 +16,11 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/linna/http-message/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/linna/http-message/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/linna/http-message/?branch=master)
 [![StyleCI](https://github.styleci.io/repos/96924222/shield?branch=master&style=flat)](https://github.styleci.io/repos/96924222)
-[![PHP 7.2](https://img.shields.io/badge/PHP-7.2-8892BF.svg)](http://php.net)
+[![PHP 8.1](https://img.shields.io/badge/PHP-8.1-8892BF.svg)](http://php.net)
 
 </div>
+
+> **_NOTE:_**  Code porting to PHP 8.1 ongoing.
 
 # About
 This package provide a implementations for [PSR-7 HTTP message interfaces](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md). Instead of

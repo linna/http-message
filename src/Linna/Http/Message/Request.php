@@ -120,8 +120,8 @@ class Request extends Message implements RequestInterface
     /**
      * Return an instance with the specific request-target.
      *
-     * If the request needs a non-origin-form request-target â€” e.g., for
-     * specifying an absolute-form, authority-form, or asterisk-form â€”
+     * If the request needs a non-origin-form request-target — e.g., for
+     * specifying an absolute-form, authority-form, or asterisk-form —
      * this method may be used to create an instance with the specified
      * request-target, verbatim.
      *
@@ -130,13 +130,11 @@ class Request extends Message implements RequestInterface
      * changed request target.
      *
      * @link http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
-     *       request-target forms allowed in request messages)
-     *
+     *     request-target forms allowed in request messages)
      * @param mixed $requestTarget
-     *
      * @return static
      */
-    public function withRequestTarget(string $requestTarget): RequestInterface
+    public function withRequestTarget(mixed $requestTarget): RequestInterface
     {
         $new = clone $this;
         $new->target = $requestTarget;
@@ -166,10 +164,8 @@ class Request extends Message implements RequestInterface
      * changed request method.
      *
      * @param string $method Case-sensitive method.
-     *
-     * @throws InvalidArgumentException for invalid HTTP methods.
-     *
      * @return static
+     * @throws \InvalidArgumentException for invalid HTTP methods.
      */
     public function withMethod(string $method): RequestInterface
     {
@@ -185,9 +181,8 @@ class Request extends Message implements RequestInterface
      * This method MUST return a UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     *
      * @return UriInterface Returns a UriInterface instance
-     *                      representing the URI of the request.
+     *     representing the URI of the request.
      */
     public function getUri(): UriInterface
     {
@@ -220,10 +215,8 @@ class Request extends Message implements RequestInterface
      * new UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     *
-     * @param UriInterface $uri          New request URI to use.
-     * @param bool         $preserveHost Preserve the original state of the Host header.
-     *
+     * @param UriInterface $uri New request URI to use.
+     * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
     public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
