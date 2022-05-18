@@ -11,11 +11,8 @@ declare(strict_types=1);
 
 namespace Linna\Http\Message;
 
-//use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-//use Psr\Http\Message\StreamInterface;
-//use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * PSR-7 ServerRequest implementation.
@@ -68,7 +65,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param string                $body               request body
      * @param string                $protocolVersion    http protocol version
      * @param array                 $attributes         unknown for now
-     * @param array                 $cookieParams       request coockies 
+     * @param array                 $cookieParams       request coockies
      * @param null|array|object     $parsedBody         request body
      * @param array                 $queryParams        request query params
      * @param array                 $serverParams       server params
@@ -78,8 +75,8 @@ class ServerRequest extends Request implements ServerRequestInterface
         string $method,
         string|UriInterface $uri,
         //optional
-        array  $headers = [],    
-        string $body = '',    
+        array  $headers = [],
+        string $body = '',
         string $protocolVersion = '1.1',
         //promoted optional
         private array $attributes = [],
@@ -87,13 +84,12 @@ class ServerRequest extends Request implements ServerRequestInterface
         private null|array|object $parsedBody = [],
         private array $queryParams = [],
         private array $serverParams = []
-    )
-    {
+    ) {
         parent::__construct(
-            uri: $uri, 
-            method: $method, 
-            body: $body, 
-            headers: $headers, 
+            method: $method,
+            uri: $uri,
+            body: $body,
+            headers: $headers,
             protocolVersion: $protocolVersion
         );
     }

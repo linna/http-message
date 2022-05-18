@@ -79,7 +79,7 @@ class MessageTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid HTTP protocol version. Must be 1.0, 1.1 or 2");
 
-        $message = self::$message->withProtocolVersion('1');
+        self::$message->withProtocolVersion('1');
     }
 
     /**

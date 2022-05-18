@@ -13,7 +13,7 @@ namespace Linna\Http\Message;
 
 use InvalidArgumentException;
 use Linna\Http\Message\Request;
-use Linna\Http\Message\Stream;
+//use Linna\Http\Message\Stream;
 use Linna\Http\Message\Uri;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +34,7 @@ class RequestTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        self::$request = new Request(new Uri('http://127.0.0.1/'));
+        self::$request = new Request(Request::METHOD_GET, new Uri('http://127.0.0.1/'));
     }
 
     /**
@@ -64,14 +64,16 @@ class RequestTest extends TestCase
     public function httpMethodsProvider(): array
     {
         return [
-            ['GET'],
             ['HEAD'],
+            ['GET'],
             ['POST'],
             ['PUT'],
+            ['PATCH'],
             ['DELETE'],
-            ['CONNECT'],
+            ['PURGE'],
             ['OPTIONS'],
-            ['TRACE']
+            ['TRACE'],
+            ['CONNECT']
         ];
     }
 
@@ -84,7 +86,7 @@ class RequestTest extends TestCase
      */
     public function testNewInstanceWithAllHttpMethods(string $method): void
     {
-        $this->assertInstanceOf(Request::class, new Request(new Uri('http://127.0.0.1/'), $method));
+        $this->assertInstanceOf(Request::class, new Request($method, new Uri('http://127.0.0.1/')));
     }
 
     /**
@@ -97,7 +99,7 @@ class RequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid HTTP method.");
 
-        $this->assertInstanceOf(Request::class, new Request(new Uri('http://127.0.0.1/'), 'FOO'));
+        (new Request('FOO', new Uri('http://127.0.0.1/')));
     }
 
     /**
@@ -126,7 +128,7 @@ class RequestTest extends TestCase
      */
     public function testGetRequestTarget(string $uri, string $result): void
     {
-        $request = new Request(new Uri($uri));
+        $request = new Request(Request::METHOD_GET, new Uri($uri));
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame($result, $request->getRequestTarget());

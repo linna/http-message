@@ -25,13 +25,13 @@ trait HeaderTrait
         $final = [];
 
         foreach ($headers as $name => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $final[$name] = $value;
                 continue;
             }
 
-            $value = explode(',', $value);
-            $final[$name] = array_map('trim', $value);
+            $value = \explode(',', $value);
+            $final[$name] = \array_map('trim', $value);
         }
 
         return $final;

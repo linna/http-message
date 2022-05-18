@@ -332,8 +332,7 @@ class StreamTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Can not rewind the stream.");
 
-        $stream = new Stream('php://output', 'w');
-        $stream->rewind();
+        (new Stream('php://output', 'w'))->rewind();
     }
 
     /**

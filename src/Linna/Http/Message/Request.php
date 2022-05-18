@@ -13,7 +13,6 @@ namespace Linna\Http\Message;
 
 use Fig\Http\Message\RequestMethodInterface;
 use InvalidArgumentException;
-use Linna\Http\Message\Traits\HeaderTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use ReflectionClass;
@@ -23,34 +22,30 @@ use ReflectionClass;
  */
 class Request extends Message implements RequestInterface, RequestMethodInterface
 {
-    use HeaderTrait;
-
-    /**
-     * @var string Request HTTP method (GET, POST, PUT.....).
-     */
-    private $method = '';
-
     /**
      * @var string Request target.
      */
-    private $target = '';
-
-    /**
-     * @var UriInterface Request uri.
-     */
-    private $uri;
+    private string $target = '';
 
     /**
      * Class Constructor.
      *
-     * @param UriInterface $uri
-     * @param string       $method
-     * @param string       $body
-     * @param array        $headers
+     * @param string        $method             request method
+     * @param UriInterface  $uri                request uri
+     * @param string        $body               request body
+     * @param array         $headers            message header
+     * @param string        $protocolVersion    protocol version
      */
-    public function __construct(string|UriInterface $uri, string $method = Request::METHOD_GET, string $body = '', array $headers = [], string $protocolVersion = '1.1')
-    {
-        $this->uri = is_string($uri) ? new Uri($uri) : $uri;
+    public function __construct(
+        //required and promoted
+        private string $method,
+        private UriInterface $uri,
+        //optional
+        string $body = '',
+        array $headers = [],
+        string $protocolVersion = '1.1'
+    ) {
+        $this->uri = \is_string($uri) ? new Uri($uri) : $uri;
 
         $this->method = $this->validateHttpMethod(\strtoupper($method));
 
@@ -63,7 +58,7 @@ class Request extends Message implements RequestInterface, RequestMethodInterfac
         parent::__construct(
             body: $stream,
             protocolVersion: $protocolVersion,
-            headers: $this->parseHeaders($headers)
+            headers: $headers
         );
     }
 

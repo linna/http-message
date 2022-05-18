@@ -20,19 +20,22 @@ use Psr\Http\Message\StreamInterface;
  */
 abstract class Message implements MessageInterface
 {
+    use Traits\HeaderTrait;
+
     /**
      * Class Constructor.
      *
-     * @param StreamInterface|null $body
-     * @param string $protocolVersion
-     * @param array $headers
+     * @param StreamInterface|null  $body               message body
+     * @param string                $protocolVersion    protocol version
+     * @param array                 $headers            message headers
      */
     public function __construct(
         private ?StreamInterface $body = null,
         private string $protocolVersion = '1.1',
         private array $headers = [],
-    )
-    {}
+    ) {
+        $this->headers = $this->parseHeaders($headers);
+    }
 
     /**
      * Retrieves the HTTP protocol version as a string.

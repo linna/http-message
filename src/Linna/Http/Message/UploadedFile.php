@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Linna\Http\Message;
 
-//use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
-//use RuntimeException;
 
 /**
  * PSR-7 Uploaded file implementation.
