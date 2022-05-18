@@ -3,7 +3,7 @@
 /**
  * Linna Http Message.
  *
- * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
+ * @author Sebastian Rapetti <sebastian.rapetti@tim.it>
  * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace Linna\Http\Message;
 
-use InvalidArgumentException;
+//use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
+//use Psr\Http\Message\StreamInterface;
+//use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * PSR-7 ServerRequest implementation.
@@ -60,69 +60,42 @@ use Psr\Http\Message\UploadedFileInterface;
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
-     * @var array Attributes
-     */
-    private array $attributes = [];
-
-    /**
-     * @var array Cookie values
-     */
-    private array $cookieParams = [];
-
-    /**
-     * var null|array|object Parsed body of the request
-     */
-    private null | array | object $parsedBody = [];
-
-    /**
-     * @var array Query params from $_GET
-     */
-    private array $queryParams = [];
-
-    /**
-     * @var array Server params from $_SERVER
-     */
-    private array $serverParams = [];
-
-    /**
      * Class Constructor.
      *
-     * @param string       $method
-     * @param UriInterface $uri
-     * @param string       $body
-     * @param array        $headers
-     * @param string       $version
+     * @param string                $method             request method
+     * @param string|UriInterface   $uri                request uri
+     * @param array                 $headers            request headers
+     * @param string                $body               request body
+     * @param string                $protocolVersion    http protocol version
+     * @param array                 $attributes         unknown for now
+     * @param array                 $cookieParams       request coockies 
+     * @param null|array|object     $parsedBody         request body
+     * @param array                 $queryParams        request query params
+     * @param array                 $serverParams       server params
      */
     public function __construct(
-        string       $method,
-        UriInterface $uri,
-        array        $headers = [],
-        string       $body    = 'php://memory',
-        string       $version = '1.1'
-    ) {
-        //from message abstract class
-        //protected $body;
-        //protected $headers = [];
-        //protected $protocolVersion = '1.1';
-
-        //message body
-        $this->body = new Stream($body, 'wb+');
-        //message headers
-        $this->headers = $headers;
-        //message protocol version
-        $this->protocolVersion = $version;
-
-        //from request class
-        //protected $method = '';
-        //protected $target = '';
-        //protected $uri;
-
-        //request method
-        $this->method = $this->validateHttpMethod(\strtoupper($method));
-        //requst target
-        $this->target = $this->getRequestTarget();
-        //request uri
-        $this->uri = $uri;
+        // required
+        string $method,
+        string|UriInterface $uri,
+        //optional
+        array  $headers = [],    
+        string $body = '',    
+        string $protocolVersion = '1.1',
+        //promoted optional
+        private array $attributes = [],
+        private array $cookieParams = [],
+        private null|array|object $parsedBody = [],
+        private array $queryParams = [],
+        private array $serverParams = []
+    )
+    {
+        parent::__construct(
+            uri: $uri, 
+            method: $method, 
+            body: $body, 
+            headers: $headers, 
+            protocolVersion: $protocolVersion
+        );
     }
 
     /**
@@ -151,7 +124,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getCookieParams(): array
     {
-        $this->cookieParams;
+        return $this->cookieParams;
     }
 
     /**

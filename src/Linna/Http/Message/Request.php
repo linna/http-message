@@ -3,7 +3,7 @@
 /**
  * Linna Http Message.
  *
- * @author Sebastian Rapetti <sebastian.rapetti@alice.it>
+ * @author Sebastian Rapetti <sebastian.rapetti@tim.it>
  * @copyright (c) 2019, Sebastian Rapetti
  * @license http://opensource.org/licenses/MIT MIT License
  */
@@ -13,6 +13,7 @@ namespace Linna\Http\Message;
 
 use Fig\Http\Message\RequestMethodInterface;
 use InvalidArgumentException;
+use Linna\Http\Message\Traits\HeaderTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use ReflectionClass;
@@ -22,6 +23,8 @@ use ReflectionClass;
  */
 class Request extends Message implements RequestInterface, RequestMethodInterface
 {
+    use HeaderTrait;
+
     /**
      * @var string Request HTTP method (GET, POST, PUT.....).
      */
@@ -45,14 +48,23 @@ class Request extends Message implements RequestInterface, RequestMethodInterfac
      * @param string       $body
      * @param array        $headers
      */
-    public function __construct(UriInterface $uri, string $method = 'GET', string $body = 'php://memory', array $headers = [], string $protocolVersion = '1.1')
+    public function __construct(string|UriInterface $uri, string $method = Request::METHOD_GET, string $body = '', array $headers = [], string $protocolVersion = '1.1')
     {
-        $this->uri = $uri;
+        $this->uri = is_string($uri) ? new Uri($uri) : $uri;
 
         $this->method = $this->validateHttpMethod(\strtoupper($method));
 
+        //create new stream
+        $stream = new Stream('php://memory', 'wb+');
+        $stream->write($body);
+        $stream->rewind();
+
         //message constructor
-        parent::__construct(new Stream($body, 'wb+'), $protocolVersion, $headers);
+        parent::__construct(
+            body: $stream,
+            protocolVersion: $protocolVersion,
+            headers: $this->parseHeaders($headers)
+        );
     }
 
     /**
