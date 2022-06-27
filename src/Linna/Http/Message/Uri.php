@@ -25,83 +25,95 @@ class Uri implements UriInterface
     /**
      * @var array Standard schemes.
      */
-    protected $standardSchemes = [
+    protected array $standardSchemes = [
         'http'  => 80,
         'https' => 443,
     ];
 
+    protected bool $withNullPort = false;
+    
     /**
-     * @var string Url scheme.
+     * @var string|null Url scheme.
      */
-    protected $scheme = '';
+    protected ?string $scheme;
 
     /**
-     * @var string Url host.
+     * @var string|null Url host.
      */
-    protected $host = '';
+    protected ?string $host;
 
     /**
-     * @var int Url port.
+     * @var int|null Url port.
      */
-    protected $port =  0;
+    protected ?int $port;
 
     /**
-     * @var string Url authority user
+     * @var string|null Url authority user
      */
-    protected $user = '';
+    protected ?string $user;
 
     /**
-     * @var string Url authority password
+     * @var string|null Url authority password
      */
-    protected $pass = '';
+    protected ?string $pass;
 
     /**
-     * @var string Url path
+     * @var string|null Url path
      */
-    protected $path = '';
+    protected ?string $path;
 
     /**
-     * @var string Url query
+     * @var string|null Url query
      */
-    protected $query = '';
+    protected ?string $query;
 
     /**
-     * @var string Url fragment
+     * @var string|null Url fragment
      */
-    protected $fragment = '';
+    protected ?string $fragment;
 
     /**
      * Constructor.
      *
-     * @param string $uri
+     * @param string|UriInterface $uri
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(string $uri)
+    public function __construct(string|UriInterface $uri)
     {
-        if (($parsedUrl = \parse_url($uri)) === false) {
-            throw new InvalidArgumentException('Bad URI provided.');
+        $parsedUrl = [];
+
+        if ($uri instanceof UriInterface){
+            $parsedUrl = (array) $uri;
+        }
+        else if (is_string($uri)) {
+            if (($parsedUrl = \parse_url($uri)) === false) {
+                throw new InvalidArgumentException('Bad URI provided.');
+            }
         }
 
-        [
-            'scheme'   => $this->scheme,
-            'host'     => $this->host,
-            'port'     => $this->port,
-            'user'     => $this->user,
-            'pass'     => $this->pass,
-            'path'     => $this->path,
-            'query'    => $this->query,
-            'fragment' => $this->fragment,
-        ] = \array_replace_recursive([
+        // https://wiki.php.net/rfc/array_unpacking_string_keys
+        // https://www.php.net/releases/8.1/en.php#array_unpacking_support_for_string_keyed_arrays
+        $f = (object)[
             'scheme'   => '',
-            'host'     => '',
-            'port'     => 0,
             'user'     => '',
             'pass'     => '',
+            'host'     => '',
+            'port'     => null,
             'path'     => '',
             'query'    => '',
             'fragment' => '',
-        ], $parsedUrl);
+            ...$parsedUrl
+        ];
+
+        $this->scheme   = $f->scheme;
+        $this->user     = $f->user;
+        $this->pass     = $f->pass;
+        $this->host     = $f->host;
+        $this->port     = $f->port;
+        $this->path     = $f->path;
+        $this->query    = $f->query;
+        $this->fragment = $f->fragment;
     }
 
     /**
@@ -143,17 +155,17 @@ class Uri implements UriInterface
      */
     public function getAuthority(): string
     {
-        if ($this->host === '') {
+        if (!$this->host) {
             return '';
         }
 
         $authority = $this->host;
 
-        if ($this->user !== '') {
+        if ($this->user) {
             $authority = "{$this->getUserInfo()}@{$authority}";
         }
 
-        if ($this->port !== 0 && $this->port !== null) {
+        if ($this->port) {
             $authority = "{$authority}:{$this->port}";
         }
 
@@ -179,11 +191,11 @@ class Uri implements UriInterface
     {
         $user = $this->user;
 
-        if ($this->pass !== '' && $this->pass !== null) {
+        if ($this->pass) {
             $user = "{$user}:{$this->pass}";
         }
 
-        return ($user !== '') ? $user : '';
+        return $user;
     }
 
     /**
@@ -222,14 +234,14 @@ class Uri implements UriInterface
         $scheme = $this->scheme;
         $port = $this->port;
 
-        if ($port === null) {
+        if ($this->withNullPort || (!$scheme && !$port)) {
             return null;
         }
 
         $standardPort = $this->checkStandardPortForCurretScheme($scheme, $port, $this->standardSchemes);
         $standardScheme = \array_key_exists($scheme, $this->standardSchemes);
 
-        //scheme present and port standard - return 0
+        //scheme present and port standard - return null
         //scheme present and port non standard - return port
         if ($standardPort && $standardScheme) {
             return $this->getPortForStandardScheme($standardPort, $port);
@@ -411,7 +423,7 @@ class Uri implements UriInterface
     {
         if ($port == null) {
             $new = clone $this;
-            $new->port = null;
+            $new->withNullPort = true;
 
             return $new;
         }

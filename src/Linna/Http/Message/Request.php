@@ -237,7 +237,7 @@ class Request extends Message implements RequestInterface, RequestMethodInterfac
         $port = $uri->getPort();
 
         //exclude standard ports from host
-        if (!\in_array($port, [80, 443])) {
+        if ($port && !\in_array($port, [80, 443])) {
             $host .= ':' . $uri->getPort();
         }
 

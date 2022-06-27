@@ -15,7 +15,7 @@
         "issues": "https://github.com/linna/http-message/issues"
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.1",
         "s3b4stian/http-message": "dev-master",
         "fig/http-message-util" : ">=1.0"
     },
@@ -33,11 +33,6 @@
     "autoload-dev": {
         "psr-4": {
             "Linna\\":  "tests/Linna/"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "infection/extension-installer": true
         }
     }
 }

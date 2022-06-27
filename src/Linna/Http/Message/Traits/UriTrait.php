@@ -38,27 +38,27 @@ trait UriTrait
     ): string {
         $uri = $scheme.$authority;
 
-        $path = ('/' !== \substr($path, 0, 1) && $uri !== '' && $path !== '') ? '/'.$path : $path;
+        $finalPath = ($path && $uri && '/' !== \substr($path, 0, 1)) ? '/'.$path : $path;
 
-        return \implode('', [$uri, $path, $query, $fragment]);
+        return \implode('', [$uri, $finalPath, $query, $fragment]);
     }
 
     /**
      * Get non standard port.
      *
-     * @param int    $port
-     * @param string $scheme
-     * @param bool   $standardScheme
-     * @param array  $supportedSchemes
+     * @param int|null  $port
+     * @param string    $scheme
+     * @param bool      $standardScheme
+     * @param array     $supportedSchemes
      *
-     * @return int
+     * @return int|null
      */
     private function getNonStandardPort(
-        int $port,
+        int|null $port,
         string $scheme,
         bool $standardScheme,
         array $supportedSchemes
-    ): int {
+    ): ?int {
         return (!$port && $standardScheme) ? $supportedSchemes[$scheme] : $port;
     }
 
@@ -68,23 +68,23 @@ trait UriTrait
      * @param bool $standardPort
      * @param int  $port
      *
-     * @return int
+     * @return int|null
      */
-    private function getPortForStandardScheme(bool $standardPort, int $port): int
+    private function getPortForStandardScheme(bool $standardPort, int $port): ?int
     {
-        return ($standardPort) ? 0 : $port;
+        return ($standardPort) ? null : $port;
     }
 
     /**
      * Check standard port for current scheme.
      *
-     * @param string $scheme
-     * @param int    $port
-     * @param array  $supportedSchemes
+     * @param string    $scheme
+     * @param int|null  $port
+     * @param array     $supportedSchemes
      *
      * @return bool
      */
-    private function checkStandardPortForCurretScheme(string $scheme, int $port, array $supportedSchemes): bool
+    private function checkStandardPortForCurretScheme(string $scheme, int|null $port, array $supportedSchemes): bool
     {
         return (isset($supportedSchemes[$scheme]) && $port === $supportedSchemes[$scheme]) ? true : false;
     }
