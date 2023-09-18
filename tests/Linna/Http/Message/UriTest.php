@@ -36,14 +36,14 @@ class UriTest extends TestCase
         $uri = new Uri(self::$uri);
 
         $this->assertInstanceOf(Uri::class, $uri);
-        $this->assertEquals('http', $uri->getScheme());
-        $this->assertEquals('username:password', $uri->getUserInfo());
-        $this->assertEquals('hostname.com', $uri->getHost());
-        $this->assertEquals(9090, $uri->getPort());
-        $this->assertEquals('username:password@hostname.com:9090', $uri->getAuthority());
-        $this->assertEquals('/path', $uri->getPath());
-        $this->assertEquals('arg=value', $uri->getQuery());
-        $this->assertEquals('anchor', $uri->getFragment());
+        $this->assertSame('http', $uri->getScheme());
+        $this->assertSame('username:password', $uri->getUserInfo());
+        $this->assertSame('hostname.com', $uri->getHost());
+        $this->assertSame(9090, $uri->getPort());
+        $this->assertSame('username:password@hostname.com:9090', $uri->getAuthority());
+        $this->assertSame('/path', $uri->getPath());
+        $this->assertSame('arg=value', $uri->getQuery());
+        $this->assertSame('anchor', $uri->getFragment());
     }
 
     /**
@@ -118,7 +118,7 @@ class UriTest extends TestCase
      */
     public function testGetAuthority(string $autority, string $expected): void
     {
-        $this->assertEquals($expected, (new Uri("{$autority}/path?arg=value#anchor"))->getAuthority());
+        $this->assertSame($expected, (new Uri("{$autority}/path?arg=value#anchor"))->getAuthority());
     }
 
     /**
@@ -146,7 +146,7 @@ class UriTest extends TestCase
      */
     public function testGetPort(string $scheme, string $port, int $expected): void
     {
-        $this->assertEquals($expected, (new Uri("{$scheme}://username:password@hostname.com{$port}/path?arg=value#anchor"))->getPort());
+        $this->assertSame($expected, (int)(new Uri("{$scheme}://username:password@hostname.com{$port}/path?arg=value#anchor"))->getPort());
     }
 
     /**
@@ -158,7 +158,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withScheme('https');
 
-        $this->assertEquals('https', $uri->getScheme());
+        $this->assertSame('https', $uri->getScheme());
     }
 
     /**
@@ -196,7 +196,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withUserInfo('testUser', 'password');
 
-        $this->assertEquals('testUser:password', $uri->getUserInfo());
+        $this->assertSame('testUser:password', $uri->getUserInfo());
     }
 
     /**
@@ -208,7 +208,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withUserInfo('testUser');
 
-        $this->assertEquals('testUser', $uri->getUserInfo());
+        $this->assertSame('testUser', $uri->getUserInfo());
     }
 
     /**
@@ -220,7 +220,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withUserInfo('');
 
-        $this->assertEquals('', $uri->getUserInfo());
+        $this->assertSame('', $uri->getUserInfo());
     }
 
     /**
@@ -232,7 +232,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withHost('example.com');
 
-        $this->assertEquals('example.com', $uri->getHost());
+        $this->assertSame('example.com', $uri->getHost());
     }
 
     /**
@@ -270,7 +270,7 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withPort(8080);
 
-        $this->assertEquals(8080, $uri->getPort());
+        $this->assertSame(8080, $uri->getPort());
     }
 
     /**
@@ -356,8 +356,8 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withPath('/otherpath');
 
-        $this->assertEquals('/otherpath', $uri->getPath());
-        $this->assertEquals('http://username:password@hostname.com:9090/otherpath?arg=value#anchor', (string) $uri);
+        $this->assertSame('/otherpath', $uri->getPath());
+        $this->assertSame('http://username:password@hostname.com:9090/otherpath?arg=value#anchor', (string) $uri);
     }
 
     /**
@@ -432,7 +432,7 @@ class UriTest extends TestCase
      */
     public function testUriToString(string $testUri): void
     {
-        $this->assertEquals($testUri, (string) (new Uri($testUri)));
+        $this->assertSame($testUri, (string) (new Uri($testUri)));
     }
 
     /**
@@ -464,8 +464,8 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withQuery($withQuery);
 
-        $this->assertEquals($expectedQuery, $uri->getQuery());
-        $this->assertEquals($expectedUri, (string) $uri);
+        $this->assertSame($expectedQuery, $uri->getQuery());
+        $this->assertSame($expectedUri, (string) $uri);
     }
 
     /**
@@ -523,8 +523,8 @@ class UriTest extends TestCase
     {
         $uri = (new Uri(self::$uri))->withFragment($withFragment);
 
-        $this->assertEquals($expectedFragment, $uri->getFragment());
-        $this->assertEquals($expectedUri, (string) $uri);
+        $this->assertSame($expectedFragment, $uri->getFragment());
+        $this->assertSame($expectedUri, (string) $uri);
     }
 
     /**
