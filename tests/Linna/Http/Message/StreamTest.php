@@ -169,7 +169,7 @@ class StreamTest extends TestCase
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
-        $this->assertEquals(25, $stream->getSize());
+        $this->assertSame(25, $stream->getSize());
 
         $stream->close();
     }
@@ -187,7 +187,7 @@ class StreamTest extends TestCase
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->close();
 
-        $this->assertEquals(0, $stream->getSize());
+        $this->assertSame(0, $stream->getSize());
     }
 
     /**
@@ -204,13 +204,13 @@ class StreamTest extends TestCase
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
-        $this->assertEquals(0, $stream->tell());
+        $this->assertSame(0, $stream->tell());
 
         $stream->seek(2);
-        $this->assertEquals(2, $stream->tell());
+        $this->assertSame(2, $stream->tell());
 
         $stream->rewind();
-        $this->assertEquals(0, $stream->tell());
+        $this->assertSame(0, $stream->tell());
 
         $stream->close();
     }
@@ -248,17 +248,17 @@ class StreamTest extends TestCase
         $stream->rewind();
 
         //not at the end of the file
-        $this->assertEquals(0, $stream->tell());
+        $this->assertSame(0, $stream->tell());
         $this->assertFalse($stream->eof());
 
         //not at the end of the file
         $stream->read(25);
-        $this->assertEquals(25, $stream->tell());
+        $this->assertSame(25, $stream->tell());
         $this->assertFalse($stream->eof());
 
         //at the end of the file
         $stream->read(1);
-        $this->assertEquals(25, $stream->tell());
+        $this->assertSame(25, $stream->tell());
         $this->assertTrue($stream->eof());
 
         //true with stream closed
@@ -310,16 +310,16 @@ class StreamTest extends TestCase
 
         $stream->write('abcdefghijklmnopqrstuwxyz');
 
-        $this->assertEquals(25, $stream->tell());
+        $this->assertSame(25, $stream->tell());
 
         $stream->rewind();
-        $this->assertEquals(0, $stream->tell());
+        $this->assertSame(0, $stream->tell());
 
         $stream->read(25);
-        $this->assertEquals(25, $stream->tell());
+        $this->assertSame(25, $stream->tell());
 
         $stream->rewind();
-        $this->assertEquals(0, $stream->tell());
+        $this->assertSame(0, $stream->tell());
     }
 
     /**
@@ -389,7 +389,7 @@ class StreamTest extends TestCase
 
         $stream = new Stream(\fopen($file, $mode));
 
-        $this->assertEquals($result, $stream->isWritable());
+        $this->assertSame($result, $stream->isWritable());
     }
 
     /**
@@ -421,7 +421,7 @@ class StreamTest extends TestCase
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
-        $this->assertEquals('abcdefghijklmnopqrstuwxyz', $stream->read(25));
+        $this->assertSame('abcdefghijklmnopqrstuwxyz', $stream->read(25));
     }
 
     /**
@@ -512,7 +512,7 @@ class StreamTest extends TestCase
 
         $stream = new Stream(\fopen($file, $mode));
 
-        $this->assertEquals($result, $stream->isReadable());
+        $this->assertSame($result, $stream->isReadable());
     }
 
     /**
@@ -529,7 +529,7 @@ class StreamTest extends TestCase
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
-        $this->assertEquals('abcdefghijklmnopqrstuwxyz', $stream->read(25));
+        $this->assertSame('abcdefghijklmnopqrstuwxyz', $stream->read(25));
     }
 
     /**
@@ -582,8 +582,8 @@ class StreamTest extends TestCase
         $stream->write('abcdefghijklmnopqrstuwxyz');
         $stream->rewind();
 
-        $this->assertEquals('abcdefghijklmnopqrst', $stream->read(20));
-        $this->assertEquals('uwxyz', $stream->getContents());
+        $this->assertSame('abcdefghijklmnopqrst', $stream->read(20));
+        $this->assertSame('uwxyz', $stream->getContents());
     }
 
     /**

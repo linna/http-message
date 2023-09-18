@@ -141,8 +141,8 @@ class ResponseTest extends TestCase
     {
         $response = new Response($code);
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals($code, $response->getStatusCode());
-        $this->assertEquals($reasonPhrase, $response->getReasonPhrase());
+        $this->assertSame($code, $response->getStatusCode());
+        $this->assertSame($reasonPhrase, $response->getReasonPhrase());
     }
 
     /**
@@ -169,8 +169,8 @@ class ResponseTest extends TestCase
 
         $this->assertNotEquals($response->getStatusCode(), self::$response->getStatusCode());
         $this->assertNotEquals($response->getReasonPhrase(), self::$response->getReasonPhrase());
-        $this->assertEquals(Response::STATUS_FORBIDDEN, $response->getStatusCode());
-        $this->assertEquals('Forbidden', $response->getReasonPhrase());
+        $this->assertSame(Response::STATUS_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame('Forbidden', $response->getReasonPhrase());
     }
 
     /**
